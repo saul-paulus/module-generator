@@ -15,6 +15,7 @@
 
 ## Architecture
 This package generates Laravel modules following a **layered service–repository architecture**, which separates concerns clearly:
+```
   ModuleName/
   ├─ Models/
   │ └─ ModuleName.php # Eloquent model
@@ -27,7 +28,7 @@ This package generates Laravel modules following a **layered service–repositor
   │ └─ ModuleName/ModuleNameController.php
   └─ Providers/
   └─ ModuleNameServiceProvider.php
-  
+  ```
   ### How it works
   1. **Model**: Represents database table  
   2. **Repository + Interface**: Handles database operations  
