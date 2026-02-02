@@ -1,0 +1,16 @@
+{
+  "name": "ixspx/module-generator",
+  "description": "generate module in laravel",
+  "autoload": {
+    "psr-4": {
+      "Ixspx\\ModuleGenerator\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "saul-paulus",
+      "email": "saulpaulus17@icloud.com"
+    }
+  ],
+  "require": {}
+}
