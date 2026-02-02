@@ -1,16 +1,38 @@
 {
   "name": "ixspx/module-generator",
   "description": "generate module in laravel",
+  "type": "library",
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "Ixspx\\ModuleGenerator\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Ixspx\\ModuleGenerator\\Tests\\": "tests/"
+    }
+  },
   "authors": [
     {
+      "role": "Developer",
       "name": "saul-paulus",
       "email": "saulpaulus17@icloud.com"
     }
   ],
-  "require": {}
+  "require": {
+    "php": "^8.5",
+    "illuminate/support": "^10.0 || ^9.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require-dev": {
+    "orchestra/testbench": "^7.0 || ^8.0",
+    "phpunit/phpunit": "^10.0"
+  },
+  "config": {
+    "sort-packages": true,
+    "preferred-install": "dist",
+    "optimize-autoloader": true
+  }
 }
