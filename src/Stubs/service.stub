@@ -1,0 +1,16 @@
+<?php
+
+
+namespace App\Services\{{ mod }};
+
+use App\Repositories\Interfaces\{{ mod }}\{{ mod }}Interface;
+
+class {{ mod }}Service
+{
+    protected ${{ mod }}Repository;
+    
+    public function __construct({{ mod }}Interface ${{ mod }}Interface)
+    {
+        $this->{{ mod }}Repository = ${{ mod }}Interface;
+    }
+}

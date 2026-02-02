@@ -1,0 +1,9 @@
+<?php
+
+
+namespace App\Repositories\Interfaces\{{ mod }};
+
+Interface {{ mod }}Interface
+{
+    // Function interface
+}

@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Repositories\Repository\{{ mod }};
+
+use App\Repositories\Interfaces\{{ mod }}\{{ mod }}Interface;
+
+
+class {{ mod }}Repository implements {{mod}}Interface
+{
+    // Interaction on database
+}
