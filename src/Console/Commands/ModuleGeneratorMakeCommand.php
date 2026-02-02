@@ -1,7 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
-namespace Ixspx\MonuleGenerator\Console;
+namespace Ixspx\ModuleGenerator\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -9,7 +10,7 @@ use Illuminate\Filesystem\Filesystem;
 
 class ModuleGeneratorMakeCommand extends Command
 {
-    protected $signature = "make:mod {name: The name of the module generator}";
+    protected $signature = 'make:mod {name}';
     protected $description = 'Generate module structure (model, repository, service, controller, provider)';
     protected Filesystem $files;
 

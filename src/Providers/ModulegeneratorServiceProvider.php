@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ixspx\MonuleGenerator\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Ixspx\MonuleGenerator\Console\ModuleGeneratorMakeCommand;
+use Ixspx\ModuleGenerator\Console\Commands\ModuleGeneratorMakeCommand;
 
 final class ModulegeneratorServiceProvider extends ServiceProvider
 {
@@ -13,7 +13,7 @@ final class ModulegeneratorServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                ModuleGeneratorMakeCommand::class,
+                ModuleGeneratorMakeCommand::class
             ]);
         }
     }

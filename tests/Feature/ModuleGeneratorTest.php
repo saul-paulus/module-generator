@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Feature;
+namespace Ixspx\ModuleGenerator\Tests\Feature;
 
 use Illuminate\Support\Facades\File;
-use Orchestra\Testbench\TestCase;
+use Ixspx\ModuleGenerator\Tests\TestCase;
 
 class ModuleGeneratorTest extends TestCase
 {
@@ -12,13 +12,14 @@ class ModuleGeneratorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // Ensure the module does not exist before each test
-        File::delete(app_path("Models/{$this->module}/{$this->module}.php"));
+
+        File::delete(app_path("Models/{$this->module}.php"));
         File::delete(app_path("Http/Controllers/{$this->module}/{$this->module}Controller.php"));
         File::delete(app_path("Providers/{$this->module}ServiceProvider.php"));
-        File::deleteDirectory(app_path("Repositories/Interfaces/{$this->module}"));
-        File::deleteDirectory(app_path("Repositories/Repository/{$this->module}"));
-        File::deleteDirectory(app_path("Services/{$this->module}"));
+
+        File::delete(app_path("Repositories/Interfaces/{$this->module}/{$this->module}RepositoryInterface.php"));
+        File::delete(app_path("Repositories/Repository/{$this->module}/{$this->module}Repository.php"));
+        File::deleteDirectory(app_path("Services/{$this->module}/{$this->module}Service.php"));
     }
 
     public function test_it_generates_full_module_structure(): void
@@ -26,32 +27,18 @@ class ModuleGeneratorTest extends TestCase
         $this->artisan('make:mod', ['name' => $this->module])
             ->assertExitCode(0);
 
-        // Model
+        $this->assertFileExists(app_path("Models/{$this->module}.php"));
+        $this->assertFileExists(app_path("Http/Controllers/{$this->module}/{$this->module}Controller.php"));
+        $this->assertFileExists(app_path("Providers/{$this->module}ServiceProvider.php"));
+
         $this->assertFileExists(
-            app_path("Models/{$this->module}/{$this->module}.php")
+            app_path("Repositories/Interfaces/{$this->module}/{$this->module}RepositoryInterface.php")
         );
 
-        // Controller
-        $this->assertFileExists(
-            app_path("Http/Controllers/{$this->module}/{$this->module}Controller.php")
-        );
-
-        // Provider
-        $this->assertFileExists(
-            app_path("Providers/{$this->module}ServiceProvider.php")
-        );
-
-        // Repository Interface
-        $this->assertFileExists(
-            app_path("Repositories/Interfaces/{$this->module}/{$this->module}Interface.php")
-        );
-
-        // Repository Implementation
         $this->assertFileExists(
             app_path("Repositories/Repository/{$this->module}/{$this->module}Repository.php")
         );
 
-        // Service
         $this->assertFileExists(
             app_path("Services/{$this->module}/{$this->module}Service.php")
         );
@@ -59,10 +46,8 @@ class ModuleGeneratorTest extends TestCase
 
     public function test_it_does_not_overwrite_existing_module(): void
     {
-        // First run
         $this->artisan('make:mod', ['name' => $this->module]);
 
-        // Second run should fail
         $this->artisan('make:mod', ['name' => $this->module])
             ->expectsOutput("Module {$this->module} already exists.")
             ->assertExitCode(1);
