@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repositories\Repository\{{ name }};
+namespace App\Repositories\Repository\{{name}};
 
-use App\Repositories\Interfaces\{{ name }}\{{ name }}Interface;
+use App\Repositories\Interfaces\{{name}}\{{name}}Interface;
 use App\Models\{{name}}Model;
 
-class {{ name }}Repository implements {{name}}Interface
+class {{name}}Repository implements {{name}}Interface
 {
    protected ${{name}}Model;
 

@@ -1,17 +1,17 @@
 <?php
 
 
-namespace App\Services\{{ name }};
+namespace App\Services\{{name}};
 
-use App\Repositories\Interfaces\{{ name }}\{{ name }}Interface;
+use App\Repositories\Interfaces\{{name}}\{{name}}Interface;
 
-class {{ name }}Service
+class {{name}}Service
 {
-    protected ${{ name }}Repository;
+    protected ${{name}}Repository;
     
-    public function __construct({{ name }}Interface ${{ name }}Interface)
+    public function __construct({{name}}Interface ${{name}}Interface)
     {
-        $this->{{ name }}Repository = ${{ name }}Interface;
+        $this->{{name}}Repository = ${{name}}Interface;
     }
 
 

@@ -1,9 +1,9 @@
 <?php
 
 
-namespace App\Repositories\Interfaces\{{ name }};
+namespace App\Repositories\Interfaces\{{name}};
 
-Interface {{ name }}Interface
+Interface {{name}}Interface
 {
     public function all();
     public function find($id);
