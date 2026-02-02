@@ -10,73 +10,76 @@ use Illuminate\Filesystem\Filesystem;
 class ModuleGeneratorMakeCommand extends Command
 {
     protected $signature = "make:mod {name: The name of the module generator}";
-    protected $description = "Create a new module generator class";
-    protected $type = "Module Generator";
-    protected $files;
+    protected $description = 'Generate module structure (model, repository, service, controller, provider)';
+    protected Filesystem $files;
 
-    public function __construct(FileSystem $files)
+    public function __construct(Filesystem $files)
     {
         parent::__construct();
         $this->files = $files;
     }
 
+
     public function handle(): int
     {
         $name = Str::studly($this->argument('name'));
-        $path = app_path("Modules/{$name}");
 
-        if ($this->files->exists($path)) {
-            $this->error("Module {$name} already exists!");
-
+        if ($this->files->exists(app_path("Models/{$name}.php"))) {
+            $this->error("Module {$name} already exists.");
             return self::FAILURE;
         }
 
-        $this->makeDirectory($path);
-        $this->generateFiles($name, $path);
-        $this->info("{$name} created successfully.");
+        $this->makeDirectories();
+        $this->generateFiles($name);
 
+        $this->info("Module {$name} created successfully.");
         return self::SUCCESS;
     }
 
-    protected function makeDirectory(string $path): void
+    protected function makeDirectories(): void
     {
-        // Buat folder utama
-        $dirs = [
-            'Models',
-            'Controllers',
-            'Repositories',
-            'Services',
-            'Providers',
+        $directories = [
+            app_path('Models'),
+            app_path('Http/Controllers'),
+            app_path('Repositories/Interfaces'),
+            app_path('Repositories/Repository'),
+            app_path("Services"),
+            app_path('Providers'),
         ];
 
-        foreach ($dirs as $dir) {
-            $this->files->makeDirectory("{$path}/{$dir}", 0755, true);
+        foreach ($directories as $dir) {
+            $this->files->ensureDirectoryExists($dir, 0755, true);
         }
     }
 
-    public function generateFiles(string $name, string $path): void
+    protected function generateFiles(string $name): void
     {
         $stubPath = __DIR__ . '/../../Stubs/';
 
-        // Buat file dasar
         $files = [
-            'model.stub'                  => "Models/{$name}/{$name}Model.php",
-            'repository.interface.stub'   => "Repositories/{$name}/{$name}RepositoryInterface.php",
-            'repository.stub'             => "Repositories/{$name}/{$name}Repository.php",
-            'service.stub'                => "Services/{$name}/{$name}Service.php",
-            'Controllers.stub'            => "Controllers/{$name}/{$name}Controller.php",
-            'Providers.stub'              => "{$name}ServiceProvider.php",
+            'model.stub'                => app_path("Models/{$name}.php"),
+            'repository.interface.stub' => app_path("Repositories/Interfaces/{$name}/{$name}RepositoryInterface.php"),
+            'repository.stub'           => app_path("Repositories/Repository/{$name}/{$name}Repository.php"),
+            'service.stub'              => app_path("Services/{$name}/{$name}Service.php"),
+            'controller.stub'           => app_path("Http/Controllers/{$name}/{$name}Controller.php"),
+            'provider.stub'             => app_path("Providers/{$name}ServiceProvider.php"),
         ];
 
-        foreach ($files as $stubFile => $targetFile) {
-            $stub = $this->files->get($stubPath . $stubFile);
-            $content = str_replace('{{name}}', $name, $stub);
-            // Jika stub adalah model, ganti juga {{table_name}}
-            if ($stubFile === 'model.stub') {
-                $tableName = Str::snake(Str::pluralStudly($name));
-                $content = str_replace('{{table_name}}', $tableName, $content);
+        foreach ($files as $stub => $target) {
+            $this->files->ensureDirectoryExists(dirname($target));
+
+            $content = $this->files->get($stubPath . $stub);
+            $content = str_replace('{{name}}', $name, $content);
+
+            if ($stub === 'model.stub') {
+                $content = str_replace(
+                    '{{table_name}}',
+                    Str::snake(Str::pluralStudly($name)),
+                    $content
+                );
             }
-            $this->files->put("{$path}/{$targetFile}", $content);
+
+            $this->files->put($target, $content);
         }
     }
 }
