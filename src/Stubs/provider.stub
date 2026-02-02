@@ -4,7 +4,7 @@
 namespace App\Providers;
 
 use App\Repositories\Interfaces\{{name}}\{{name}}Interface;
-use App\Repositories\Repository\{{dname}}\{{name}}Repository;
+use App\Repositories\Repository\{{name}}\{{name}}Repository;
 use Illuminate\Support\ServiceProvider;
 
 
