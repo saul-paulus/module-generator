@@ -3,9 +3,43 @@
 namespace App\Repositories\Repository\{{ name }};
 
 use App\Repositories\Interfaces\{{ name }}\{{ name }}Interface;
-
+use App\Models\{{name}}Model;
 
 class {{ name }}Repository implements {{name}}Interface
 {
-    // Interaction on database
+   protected ${{name}}Model;
+
+    public function __construct({{name}}Model ${{name}}Model)
+    {
+        $this->{{name}}Model = ${{name}}Model;
+    }
+
+    public function all()
+    {
+        return $this->{{name}}Model->all();
+    }
+
+    public function find($id)
+    {
+        return $this->{{name}}Model->find($id);
+    }
+
+    public function create(array $data)
+    {
+        return $this->{{name}}Model->create($data);
+    }
+
+    public function update($id, array $data)
+    {
+        $item = $this->find($id);
+        if($item) $item->update($data);
+        return $item;
+    }
+
+    public function delete($id)
+    {
+        $item = $this->find($id);
+        if($item) $item->delete();
+        return $item;
+    }
 }

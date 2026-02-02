@@ -13,4 +13,30 @@ class {{ name }}Service
     {
         $this->{{ name }}Repository = ${{ name }}Interface;
     }
+
+
+    public function all()
+    {
+        return $this->{{name}}Repository->all();
+    }
+
+    public function find($id)
+    {
+        return $this->{{name}}Repository->find($id);
+    }
+
+    public function create(array $data)
+    {
+        return $this->{{name}}Repository->create($data);
+    }
+
+    public function update($id, array $data)
+    {
+        return $this->{{name}}Repository->update($id, $data);
+    }
+
+    public function delete($id)
+    {
+        return $this->{{name}}Repository->delete($id);
+    }
 }

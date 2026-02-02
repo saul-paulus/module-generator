@@ -17,4 +17,9 @@ class {{ name }}ServiceProvider extends ServiceProvider
             {{ name }}Repository::class
         );
     }
+
+    public function boot()
+    {
+        //
+    }
 }
