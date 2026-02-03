@@ -36,7 +36,7 @@ This package generates Laravel modules following a **layered service–repositor
   4. **Controller**: Handles HTTP requests and responses  
   5. **ServiceProvider**: Binds interfaces to implementations  
 
-  This separation allows **clean, maintainable, and testable code**.\
+  This separation allows **clean, maintainable, and testable code**.
   
 ## Requirements
 - PHP >= 8.1  
