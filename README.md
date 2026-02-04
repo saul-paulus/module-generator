@@ -76,4 +76,3 @@ composer require ixspx/module-generator
 ## License
 
 MIT License — see [LICENSE](LICENSE) for full text.
-![License](https://img.shields.io/badge/license-MIT-green.svg)
