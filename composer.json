@@ -26,6 +26,13 @@
       "Ixspx\\ModuleGenerator\\": "src/"
     }
   },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Ixspx\\ModuleGenerator\\Providers\\InstallApiJwtServiceProvider"
+      ]
+    }
+  },
   "autoload-dev": {
     "psr-4": {
       "Ixspx\\ModuleGenerator\\Tests\\": "tests/"
