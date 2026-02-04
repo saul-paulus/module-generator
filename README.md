@@ -75,4 +75,4 @@ composer require ixspx/module-generator
 
 ## License
 
-MIT © 2025 Saul Paulus (Ixspx)
+MIT License — see [LICENSE](LICENSE) for full text.
