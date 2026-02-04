@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Support;
+
+use Illuminate\Http\JsonResponse;
+
+trait ApiResponder
+{
+    protected function success(
+        mixed $data = null,
+        string $message = 'Success',
+        int $status = 200
+    ): JsonResponse {
+        return ApiResponse::success($data, $message, $status);
+    }
+
+    protected function error(
+        string $message = 'Error',
+        int $status = 400,
+        mixed $errors = null
+    ): JsonResponse {
+        return ApiResponse::error($message, $status, $errors);
+    }
+
+    protected function notFound(
+        string $message = 'Resource not found'
+    ): JsonResponse {
+        return ApiResponse::notFound($message);
+    }
+
+    protected function unauthorized(
+        string $message = 'Unauthorized'
+    ): JsonResponse {
+        return ApiResponse::unauthorized($message);
+    }
+
+    protected function forbidden(
+        string $message = 'Forbidden'
+    ): JsonResponse {
+        return ApiResponse::forbidden($message);
+    }
+
+    protected function validation(
+        mixed $errors,
+        string $message = 'Validation failed'
+    ): JsonResponse {
+        return ApiResponse::validation($errors, $message);
+    }
+}

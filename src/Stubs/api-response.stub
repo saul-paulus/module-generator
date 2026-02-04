@@ -1,0 +1,55 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Support;
+
+use Illuminate\Http\JsonResponse;
+
+class ApiResponse
+{
+    public static function success(mixed $data = null,string $message = '',int $status = 200): JsonResponse {
+        return response()->json([
+            'responseCode' => $status
+            'message' => $message,
+            'data'    => $data,
+        ], $status);
+    }
+
+    public static function error(
+        string $message = 'Error',
+        int $status = 400,
+        mixed $errors = null
+    ): JsonResponse {
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+            'errors'  => $errors,
+        ], $status);
+    }
+
+    public static function notFound(
+        string $message = 'Resource not found'
+    ): JsonResponse {
+        return self::error($message, 404);
+    }
+
+    public static function unauthorized(
+        string $message = 'Unauthorized'
+    ): JsonResponse {
+        return self::error($message, 401);
+    }
+
+    public static function forbidden(
+        string $message = 'Forbidden'
+    ): JsonResponse {
+        return self::error($message, 403);
+    }
+
+    public static function validation(
+        mixed $errors,
+        string $message = 'Validation failed'
+    ): JsonResponse {
+        return self::error($message, 422, $errors);
+    }
+}

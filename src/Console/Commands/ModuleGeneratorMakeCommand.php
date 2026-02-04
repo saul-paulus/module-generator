@@ -20,7 +20,6 @@ class ModuleGeneratorMakeCommand extends Command
         $this->files = $files;
     }
 
-
     public function handle(): int
     {
         $name = Str::studly($this->argument('name'));
