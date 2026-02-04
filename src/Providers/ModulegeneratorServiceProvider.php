@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Ixspx\MonuleGenerator\Providers;
 
-use ApiResponseMakeCommand;
 use Illuminate\Support\ServiceProvider;
+use Ixspx\ModuleGenerator\Console\Commands\ApiResponseMakeCommand;
 use Ixspx\ModuleGenerator\Console\Commands\ModuleGeneratorMakeCommand;
 
 final class ModulegeneratorServiceProvider extends ServiceProvider
@@ -15,7 +15,7 @@ final class ModulegeneratorServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ModuleGeneratorMakeCommand::class,
-                ApiResponseMakeCommand::class
+                ApiResponseMakeCommand::class,
             ]);
         }
     }
