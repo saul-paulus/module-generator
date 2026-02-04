@@ -70,8 +70,12 @@ composer require ixspx/module-generator
 ```
 
 - You are now ready to generate modules:
+
+```
   php artisan make:mod {{nameModule}}
-  Example: php artisan make:mod OrderPayment
+```
+
+Example: php artisan make:mod OrderPayment
 
 ## License
 

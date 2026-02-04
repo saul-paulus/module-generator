@@ -1,0 +1,6 @@
+'guards' => [
+    'jwt' => [
+        'driver' => 'jwt',
+        'provider' => 'users',
+    ],
+],
