@@ -23,14 +23,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Ixspx\\ModuleGenerator\\": "src/"
-    }
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Ixspx\\ModuleGenerator\\Providers\\InstallApiJwtServiceProvider"
-      ]
+      "Ixspx\\ModuleGenerator\\": "src/",
+      "App\\Http\\Middleware\\": "src/Stubs/api-jwt/Middleware/"
     }
   },
   "autoload-dev": {

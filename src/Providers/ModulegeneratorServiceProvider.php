@@ -6,6 +6,7 @@ namespace Ixspx\MonuleGenerator\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Ixspx\ModuleGenerator\Console\Commands\ApiResponseMakeCommand;
+use Ixspx\ModuleGenerator\Console\Commands\InstallApiJwtCommand;
 use Ixspx\ModuleGenerator\Console\Commands\ModuleGeneratorMakeCommand;
 
 final class ModulegeneratorServiceProvider extends ServiceProvider
@@ -16,6 +17,7 @@ final class ModulegeneratorServiceProvider extends ServiceProvider
             $this->commands([
                 ModuleGeneratorMakeCommand::class,
                 ApiResponseMakeCommand::class,
+                InstallApiJwtCommand::class
             ]);
         }
     }
