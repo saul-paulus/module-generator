@@ -27,7 +27,6 @@ class ApiResponseMakeCommand extends Command
 
         $files = [
             'api-response.stub'  => app_path('Support/ApiResponse.php'),
-            'api-responder.stub' => app_path('Support/ApiResponder.php'),
         ];
 
         foreach ($files as $stub => $destination) {

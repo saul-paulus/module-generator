@@ -6,16 +6,14 @@ namespace App\Support;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\MessageBag;
+use Throwable;
 
 class ApiResponse
 {
-    public static function success(
-        mixed $data = null,
-        string $message = 'The request has been processed successfully',
-        int $status = 200,
-        array $meta = [],
-        array $links = []
-    ): JsonResponse {
+    public static function success(mixed $data = null,string $message = 'The request has been processed successfully',int $status = 200,array $meta = [],array $links = []): JsonResponse 
+    {
         return response()->json([
             'success'      => true,
             'responseCode' => $status,
@@ -29,11 +27,8 @@ class ApiResponse
     /**
      * Automatic paginator response
      */
-    public static function paginate(
-        LengthAwarePaginator $paginator,
-        string $message = 'The request has been processed successfully',
-        int $status = 200
-    ): JsonResponse {
+    public static function paginate(LengthAwarePaginator $paginator, string $message = 'The request has been processed successfully',int $status = 200): JsonResponse 
+    {
         return self::success(
             data: $paginator->items(),
             message: $message,
@@ -53,36 +48,25 @@ class ApiResponse
         );
     }
 
-    public static function error(
-        string $message = 'The request could not be processed',
-        int $status = 400,
-        mixed $errors = null
-    ): JsonResponse {
+    public static function throw(string $messageException, string $message = 'The request could not be processed',int $status = 400,mixed $errors = null): JsonResponse 
+    {
+        Log::error($messageException);
+
+        if ($messageException instanceof MessageBag) {
+            $errors = $messageException->toArray();
+        } elseif ($messageException instanceof \Throwable) {
+            $errors = ['exception' => [$messageException->getMessage()]];
+        } elseif (is_array($messageException)) {
+            $errors = $messageException;
+        } else {
+            $errors = ['error' => [$messageException]];
+        }
+      
         return response()->json([
             'success'      => false,
             'responseCode' => $status,
             'message'      => $message,
             'errors'       => $errors,
         ], $status);
-    }
-
-    public static function notFound(string $message = 'Resource not found'): JsonResponse
-    {
-        return self::error($message, 404);
-    }
-
-    public static function unauthorized(string $message = 'Unauthorized'): JsonResponse
-    {
-        return self::error($message, 401);
-    }
-
-    public static function forbidden(string $message = 'Forbidden'): JsonResponse
-    {
-        return self::error($message, 403);
-    }
-
-    public static function validation(mixed $errors, string $message = 'Validation failed'): JsonResponse
-    {
-        return self::error($message, 422, $errors);
     }
 }
