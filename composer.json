@@ -23,8 +23,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Ixspx\\ModuleGenerator\\": "src/",
-      "App\\Http\\Middleware\\": "src/Stubs/api-jwt/Middleware/"
+      "Ixspx\\ModuleGenerator\\": "src/"
     }
   },
   "autoload-dev": {

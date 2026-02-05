@@ -16,8 +16,7 @@ final class ModulegeneratorServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ModuleGeneratorMakeCommand::class,
-                ApiResponseMakeCommand::class,
-                InstallApiJwtCommand::class
+                ApiResponseMakeCommand::class
             ]);
         }
     }
