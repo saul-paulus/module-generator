@@ -12,7 +12,6 @@ class ApiResponseTest extends TestCase
         parent::setUp();
 
         File::delete(app_path('Support/ApiResponse.php'));
-        File::delete(app_path('Support/ApiResponder.php'));
     }
 
     public function test_it_generates_api_response_helper_classes(): void
@@ -21,7 +20,6 @@ class ApiResponseTest extends TestCase
             ->assertExitCode(0);
 
         $this->assertFileExists(app_path('Support/ApiResponse.php'));
-        $this->assertFileExists(app_path('Support/ApiResponder.php'));
     }
 
     public function test_it_does_not_overwrite_existing_api_response_classes(): void
@@ -30,7 +28,6 @@ class ApiResponseTest extends TestCase
 
         $this->artisan('make:api-response')
             ->expectsOutput('Skipped: ' . app_path('Support/ApiResponse.php') . ' already exists.')
-            ->expectsOutput('Skipped: ' . app_path('Support/ApiResponder.php') . ' already exists.')
             ->assertExitCode(0);
     }
 }
