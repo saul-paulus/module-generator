@@ -24,30 +24,6 @@ class ApiResponse
         ], $status);
     }
 
-    /**
-     * Automatic paginator response
-     */
-    public static function paginate(LengthAwarePaginator $paginator, string $message = 'The request has been processed successfully',int $status = 200): JsonResponse 
-    {
-        return self::success(
-            data: $paginator->items(),
-            message: $message,
-            status: $status,
-            meta: [
-                'total'        => $paginator->total(),
-                'count'        => $paginator->count(),
-                'per_page'     => $paginator->perPage(),
-                'current_page' => $paginator->currentPage(),
-                'last_page'    => $paginator->lastPage(),
-            ],
-            links: [
-                'self' => $paginator->url($paginator->currentPage()),
-                'next' => $paginator->nextPageUrl(),
-                'prev' => $paginator->previousPageUrl(),
-            ]
-        );
-    }
-
     public static function throw(string $messageException, string $message = 'The request could not be processed',int $status = 400,mixed $errors = null): JsonResponse 
     {
         Log::error($messageException);
@@ -70,3 +46,4 @@ class ApiResponse
         ], $status);
     }
 }
+
