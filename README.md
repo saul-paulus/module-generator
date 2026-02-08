@@ -14,34 +14,56 @@ Generate a complete module structure in Laravel, including:
 - Controller
 - Service Provider
 
-## Architecture
+## 🏗 Architecture Overview
 
-This package generates Laravel modules following a **layered service–repository architecture**, which separates concerns clearly:
+Generated modules follow a layered service–repository architecture:
 
 ```
-  ModuleName/
-  ├─ Models/
-  │ └─ ModuleName.php # Eloquent model
-  ├─ Repositories/
-  │ ├─ Interfaces/ModuleName/ModuleNameRepositoryInterface.php
-  │ └─ Repository/ModuleName/ModuleNameRepository.php
-  ├─ Services/
-  │ ├─ ModuleName/ModuleNameService.php
-  ├─ Http/Controllers/
-  │ └─ ModuleName/ModuleNameController.php
-  └─ Providers/
-  └─ ModuleNameServiceProvider.php
+ModuleName/
+├── Models/
+│   └── ModuleName.php
+│
+├── Repositories/
+│   ├── Interfaces/
+│   │   └── ModuleName/
+│   │       └── ModuleNameRepositoryInterface.php
+│   └── Repository/
+│       └── ModuleName/
+│           └── ModuleNameRepository.php
+│
+├── Services/
+│   └── ModuleName/
+│       └── ModuleNameService.php
+│
+├── Http/
+│   └── Controllers/
+│       └── ModuleName/
+│           └── ModuleNameController.php
+│
+└── Providers/
+    └── ModuleNameServiceProvider.php
 ```
 
-### How it works
+## 🧠 Architectural Principles
 
-1. **Model**: Represents database table
-2. **Repository + Interface**: Handles database operations
-3. **Service**: Business logic layer
-4. **Controller**: Handles HTTP requests and responses
-5. **ServiceProvider**: Binds interfaces to implementations
+Each layer has a single responsibility:
 
-This separation allows **clean, maintainable, and testable code**.
+1. Model
+   Represents the database table (Eloquent ORM).
+
+2. Repository + Interface
+   Encapsulates all database access logic.
+
+3. Service
+   Contains business rules and application logic.
+
+4. Controller
+   Handles HTTP requests and responses.
+
+5. Service Provider
+   Binds interfaces to concrete implementations.
+
+This approach results in testable, decoupled, and scalable code.
 
 ## Requirements
 
@@ -56,27 +78,40 @@ Install via Composer:
 composer require ixspx/module-generator
 ```
 
-## Usage
+## ⚙ Manual Provider Registration (Optional)
 
-- After installing the package:
-  1. If your Laravel version supports **package discovery**, the service provider is automatically registered.
-  2. Otherwise, add the following line to the `providers` array in `config/app.php`:
+If package discovery is disabled, register the provider manually in config/app.php:
 
 ```
 'providers' => [
     // Other service providers...
     Ixspx\ModuleGenerator\Providers\ModuleGeneratorServiceProvider::class,
-],
+]
 ```
 
-- You are now ready to generate modules:
+## 🛠 Usage
+
+Generate a Module
 
 ```
   php artisan make:mod {{nameModule}}
 ```
 
-Example: php artisan make:mod OrderPayment
+Example:
 
-## License
+```
+php artisan make:mod OrderPayment
+```
 
-MIT License — see [LICENSE](LICENSE) for full text.
+This will generate the full module structure using the layered architecture described above.
+
+Generate API Response Helper
+
+```
+php artisan make:api-response
+```
+
+## 📄 License
+
+This project is open-source software licensed under the MIT License.
+See the see [LICENSE](LICENSE)
