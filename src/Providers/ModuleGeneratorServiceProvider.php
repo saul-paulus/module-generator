@@ -8,14 +8,14 @@ use Illuminate\Support\ServiceProvider;
 use Ixspx\ModuleGenerator\Console\Commands\ApiResponseMakeCommand;
 use Ixspx\ModuleGenerator\Console\Commands\ModuleGeneratorMakeCommand;
 
-final class ModulegeneratorServiceProvider extends ServiceProvider
+final class ModuleGeneratorServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ModuleGeneratorMakeCommand::class,
-                ApiResponseMakeCommand::class
+                ApiResponseMakeCommand::class,
             ]);
         }
     }

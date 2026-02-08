@@ -21,9 +21,16 @@
     "illuminate/filesystem": "^10.0 || ^11.0 || ^12.0",
     "illuminate/support": "^10.0 || ^11.0 || ^12.0"
   },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Ixspx\\ModuleGenerator\\ModuleGeneratorServiceProvider"
+      ]
+    }
+  },
   "autoload": {
     "psr-4": {
-      "Ixspx\\ModuleGenerator\\": "src/"
+      "Ixspx\\ModuleGenerator\\Providers\\": "src/Providers/"
     }
   },
   "autoload-dev": {
