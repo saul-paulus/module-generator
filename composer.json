@@ -30,7 +30,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Ixspx\\ModuleGenerator\\Providers\\": "src/Providers/"
+      "Ixspx\\ModuleGenerator\\": "src/"
     }
   },
   "autoload-dev": {
