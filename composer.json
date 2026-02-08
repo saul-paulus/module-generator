@@ -24,7 +24,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Ixspx\\ModuleGenerator\\ModuleGeneratorServiceProvider"
+        "Ixspx\\ModuleGenerator\\Providers\\ModuleGeneratorServiceProvider"
       ]
     }
   },
