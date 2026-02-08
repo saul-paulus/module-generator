@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ixspx\MonuleGenerator\Providers;
+namespace Ixspx\ModuleGenerator\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Ixspx\ModuleGenerator\Console\Commands\ApiResponseMakeCommand;
-use Ixspx\ModuleGenerator\Console\Commands\InstallApiJwtCommand;
 use Ixspx\ModuleGenerator\Console\Commands\ModuleGeneratorMakeCommand;
 
 final class ModulegeneratorServiceProvider extends ServiceProvider
