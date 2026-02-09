@@ -2,15 +2,16 @@
 
 namespace Ixspx\ModuleGenerator\Tests;
 
+use Ixspx\ModuleGenerator\Providers\ModuleGeneratorServiceProvider as ProvidersModuleGeneratorServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Ixspx\MonuleGenerator\Providers\ModulegeneratorServiceProvider;
+
 
 abstract class TestCase extends BaseTestCase
 {
     protected function getPackageProviders($app)
     {
         return [
-            ModulegeneratorServiceProvider::class,
+            ProvidersModuleGeneratorServiceProvider::class,
         ];
     }
 }

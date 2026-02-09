@@ -27,7 +27,7 @@ class ApiInstallCommand extends Command
             'api-route.stub'              => base_path('routes/api.php'),
             'api-middleware.stub'         => app_path('Http/Middleware/ForceJsonResponse.php'),
             'api-response.stub'           => app_path('Support/ApiResponse.php'),
-            'api-exception-register.stub' => app_path('Exceptions/ApiExceptionRegistrar.php'),
+            'api-exception-registrar.stub' => app_path('Exceptions/ApiExceptionRegistrar.php'),
         ]);
 
         $this->info('API starter installed successfully.');

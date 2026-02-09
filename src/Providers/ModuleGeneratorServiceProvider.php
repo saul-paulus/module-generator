@@ -15,33 +15,25 @@ final class ModuleGeneratorServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../../config/module-generator.php',
+            __DIR__ . '/../config/module-generator.php',
             'module-generator'
         );
     }
 
-    public function boot(Router $router): void
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
+
+            $this->publishes([
+                __DIR__ . '/../config/module-generator.php'
+                => config_path('module-generator.php'),
+            ], 'module-generator-config');
+
             $this->commands([
                 ModuleGeneratorMakeCommand::class,
                 ApiResponseMakeCommand::class,
-                ApiInstallCommand::class
+                ApiInstallCommand::class,
             ]);
-
-            $this->publishes([
-                __DIR__ . '/../../config/module-generator.php' =>
-                config_path('module-generator.php'),
-            ], 'module-generator-config');
-        }
-
-        /**
-         * Auto register middleware aliases
-         */
-        foreach (config('module-generator.middleware', []) as $alias => $class) {
-            if (class_exists($class)) {
-                $router->aliasMiddleware($alias, $class);
-            }
         }
     }
 }
