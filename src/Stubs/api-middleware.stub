@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Middleware;
+
+use App\Support\ApiResponse;
+use Closure;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
+
+class ApiMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        // Force Accept header to JSON
+        $request->headers->set('Accept', 'application/json');
+
+        try {
+            $response = $next($request);
+        } catch (Throwable $e) {
+            return ApiResponse::throw($e->getMessage(), $e->getMessage(), 500);
+        }
+
+        if ($response instanceof JsonResponse) {
+            return $response;
+        }
+
+        return response()->json(
+            $response->getOriginalContent() ?? [],
+            $response->getStatusCode(),
+            $response->headers->all()
+        );
+    }
+}
