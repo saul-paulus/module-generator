@@ -20,7 +20,6 @@ final class ModuleGeneratorServiceProvider extends ServiceProvider
         );
     }
 
-
     public function boot(Router $router): void
     {
         if ($this->app->runningInConsole()) {

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | All routes are stateless & JSON only
 */
 
-Route::middleware(['api.json'])->prefix('v1')->group(function () {
+Route::middleware(['force.json'])->prefix('v1')->group(function () {
 
     Route::get('/health', function () {
         return [

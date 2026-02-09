@@ -23,72 +23,42 @@ class ApiInstallCommand extends Command
 
     public function handle(): int
     {
-        $this->installRoutes();
-        $this->installMiddleware();
-        $this->installResponseHelper();
+        $this->installFiles([
+            'api-route.stub'              => base_path('routes/api.php'),
+            'api-middleware.stub'         => app_path('Http/Middleware/ForceJsonResponse.php'),
+            'api-response.stub'           => app_path('Support/ApiResponse.php'),
+            'api-exception-register.stub' => app_path('Exceptions/ApiExceptionRegistrar.php'),
+        ]);
 
-        $this->info("API started installed successfully");
+        $this->info('API starter installed successfully.');
 
         return self::SUCCESS;
     }
 
-    public function installRoutes()
+    protected  function installFiles(array $map): void
     {
-        $targetPath = base_path('routes/api.php');
-
-        if ($this->files->exists($targetPath) && !$this->option('force')) {
-            $this->warn('routes/api.php already exists, skipped.');
-            return;
-        }
-
-        $this->files->copy(__DIR__ . '/../../routes/api.php', $targetPath);
-
-        $this->line('✔ API routes installed');
-    }
-
-    public function installMiddleware(): void
-    {
-        $stubPath = __DIR__ . '/../../Stubs/';
-
-        $files = [
-            'api-middleware.stub' => app_path('Http/Middleware/ApiMiddleware.php'),
-        ];
-
-        foreach ($files as $stub => $destination) {
-            if ($this->files->exists($destination)) {
+        foreach ($map as $stub => $destination) {
+            if ($this->files->exists($destination) && !$this->option('force')) {
                 $this->warn("Skipped: {$destination} already exists.");
                 continue;
             }
 
-            $this->files->ensureDirectoryExists(dirname($destination));
+            $stubFile = $this->stubPath($stub);
 
-            $content = $this->files->get($stubPath . $stub);
-            $this->files->put($destination, $content);
-
-            $this->line('✔ ApiMiddleware installed');
-        }
-    }
-
-    public function installResponseHelper()
-    {
-        $stubPath = __DIR__ . '/../../Stubs/';
-
-        $files = [
-            'api-response.stub'  => app_path('Support/ApiResponse.php'),
-        ];
-
-        foreach ($files as $stub => $destination) {
-            if ($this->files->exists($destination)) {
-                $this->warn("Skipped: {$destination} already exists.");
+            if (!$this->files->exists($stubFile)) {
+                $this->error("Stub not found: {$stub}");
                 continue;
             }
 
             $this->files->ensureDirectoryExists(dirname($destination));
+            $this->files->put($destination, $this->files->get($stubFile));
 
-            $content = $this->files->get($stubPath . $stub);
-            $this->files->put($destination, $content);
-
-            $this->line('✔ ApiResponse installed');
+            $this->line("✔ Installed: {$destination}");
         }
+    }
+
+    protected function stubPath(string $file): string
+    {
+        return __DIR__ . "/../../Stubs/{$file}";
     }
 }
