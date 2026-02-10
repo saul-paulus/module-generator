@@ -24,13 +24,19 @@ class ModuleGeneratorMakeCommand extends Command
     {
         $name = Str::studly($this->argument('name'));
 
+        $replacements = [
+            '{{name}}' => $name,
+            '{{nameVariable}}' => lcfirst($name),
+        ];
+
         if ($this->files->exists(app_path("Models/{$name}.php"))) {
             $this->error("Module {$name} already exists.");
             return self::FAILURE;
         }
 
         $this->makeDirectories();
-        $this->generateFiles($name);
+        $this->generateFiles($name, $replacements);
+
 
         $this->info("Module {$name} created successfully.");
         return self::SUCCESS;
@@ -52,12 +58,12 @@ class ModuleGeneratorMakeCommand extends Command
         }
     }
 
-    protected function generateFiles(string $name): void
+    protected function generateFiles(string $name, array $replacements): void
     {
         $stubPath = __DIR__ . '/../../Stubs/';
 
         $files = [
-            'model.stub'                => app_path("Models/{$name}.php"),
+            'model.stub'                => app_path("Models/{$name}/{$name}.php"),
             'repository.interface.stub' => app_path("Repositories/Interfaces/{$name}/{$name}RepositoryInterface.php"),
             'repository.stub'           => app_path("Repositories/Repository/{$name}/{$name}Repository.php"),
             'service.stub'              => app_path("Services/{$name}/{$name}Service.php"),
@@ -69,8 +75,14 @@ class ModuleGeneratorMakeCommand extends Command
             $this->files->ensureDirectoryExists(dirname($target));
 
             $content = $this->files->get($stubPath . $stub);
-            $content = str_replace('{{name}}', $name, $content);
+            // Global replacements
+            $content = str_replace(
+                array_keys($replacements),
+                array_values($replacements),
+                $content
+            );
 
+            // Model-only replacement
             if ($stub === 'model.stub') {
                 $content = str_replace(
                     '{{table_name}}',
@@ -80,6 +92,7 @@ class ModuleGeneratorMakeCommand extends Command
             }
 
             $this->files->put($target, $content);
+            $this->line("✔ Installed: {$target}");
         }
     }
 }

@@ -31,7 +31,6 @@ class ApiInstallCommand extends Command
         ]);
 
         $this->info('API starter installed successfully.');
-
         return self::SUCCESS;
     }
 
