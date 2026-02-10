@@ -80,7 +80,7 @@ composer require ixspx/module-generator
 
 ## ⚙ Manual Provider Registration (Optional)
 
-If package discovery is disabled, register the provider manually in config/app.php:
+If package discovery is disabled, register the provider manually in bootstrap/providers.php:
 
 ```
 'providers' => [
