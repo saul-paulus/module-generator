@@ -104,6 +104,11 @@ You may add the --force option to overwrite existing API files.
 After running make:api-install, you must manually register the API configuration in bootstrap/app.php:
 
 ```
+use Illuminate\Support\Facades\Route;
+use App\Exceptions\ApiExceptionRegistrar;
+use App\Http\Middleware\ForceJsonResponse;
+
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
