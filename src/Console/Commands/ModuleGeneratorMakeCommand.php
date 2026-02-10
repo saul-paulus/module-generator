@@ -64,7 +64,7 @@ class ModuleGeneratorMakeCommand extends Command
 
         $files = [
             'model.stub'                => app_path("Models/{$name}/{$name}.php"),
-            'repository.interface.stub' => app_path("Repositories/Interfaces/{$name}/{$name}RepositoryInterface.php"),
+            'repository.interface.stub' => app_path("Repositories/Interfaces/{$name}/{$name}Interface.php"),
             'repository.stub'           => app_path("Repositories/Repository/{$name}/{$name}Repository.php"),
             'service.stub'              => app_path("Services/{$name}/{$name}Service.php"),
             'controller.stub'           => app_path("Http/Controllers/{$name}/{$name}Controller.php"),
