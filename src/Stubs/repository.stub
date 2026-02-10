@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class {{name}}Repository implements {{name}}Interface
 {
-   protected ${{lcfirst(name)}}Model;
+   protected ${{nameVariable}}Model;
 
-    public function __construct({{name}}Model ${{lcfirst(name)}}Model)
+    public function __construct({{name}}Model ${{nameVariable}}Model)
     {
-        $this->{{lcfirst(name)}}Model = ${{lcfirst(name)}}Model;
+        $this->{{nameVariable}}Model = ${{nameVariable}}Model;
     }
 
     /**

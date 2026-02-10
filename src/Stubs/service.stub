@@ -12,11 +12,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class {{name}}Service
 {
-    protected ${{lcfirst(name)}}Repository;
+    protected ${{nameVariable}}Repository;
     
-    public function __construct({{name}}Interface ${{lcfirst(name)}}Interface)
+    public function __construct({{name}}Interface ${{nameVariable}}Interface)
     {
-        $this->{{lcfirst(name)}}Repository = ${{lcfirst(name)}}Interface;
+        $this->{{nameVariable}}Repository = ${{nameVariable}}Interface;
     }
 
     /**

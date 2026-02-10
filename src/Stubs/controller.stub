@@ -10,11 +10,11 @@ use App\Support\ApiResponse;
 
 class {{name}}Controller extends Controller
 {
-    protected ${{lcfirst(name)}}Service;
+    protected ${{nameVariable}}Service;
 
-    public function __construct({{name}}Service ${{lcfirst(name)}}Service)
+    public function __construct({{name}}Service ${{nameVariable}}Service)
     {
-        $this->{{lcfirst(name)}}Service = ${{lcfirst(name)}}Service;
+        $this->{{nameVariable}}Service = ${{nameVariable}}Service;
     }
 
     public function HandlerGetTest()
