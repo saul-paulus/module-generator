@@ -3,9 +3,20 @@
 namespace App\Exceptions;
 
 use App\Support\ApiResponse;
+use DomainException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Nette\FileNotFoundException;
+use PDOException;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -13,22 +24,72 @@ final class ApiExceptionRegistrar
 {
     public static function register($exceptions): void
     {
-        $exceptions->render(function (AuthenticationException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return ApiResponse::error('Unauthenticated', 401);
-            }
-        });
-
-        $exceptions->render(function (ValidationException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return ApiResponse::error($e->errors(), 422);
-            }
-        });
-
         $exceptions->render(function (Throwable $e, Request $request) {
-            if ($request->is('api/*')) {
-                return ApiResponse::error('Server Error', 500);
+
+            if (!$request->expectsJson()) {
+                return null;
             }
+
+            return ApiResponse::throw(
+                $e,
+                match (true) {
+
+                    // AUTH
+                    $e instanceof AuthenticationException        => 'Unauthenticated',
+                    $e instanceof AuthorizationException         => 'Forbidden',
+                    $e instanceof AccessDeniedHttpException       => 'Access denied',
+
+                    // ROUTE
+                    $e instanceof NotFoundHttpException           => 'Route not found',
+                    $e instanceof MethodNotAllowedHttpException   => 'Method not allowed',
+
+                    // VALIDATION
+                    $e instanceof ValidationException             => 'Validation error',
+                    $e instanceof BadRequestHttpException         => 'Bad request',
+                    $e instanceof ThrottleRequestsException       => 'Too many requests',
+
+                    // DATA
+                    $e instanceof ModelNotFoundException          => 'Data not found',
+                    $e instanceof QueryException                  => 'Database error',
+                    $e instanceof PDOException                    => 'Database connection error',
+
+                    // DOMAIN
+                    $e instanceof DomainException                 => $e->getMessage(),
+
+                    // FILE
+                    $e instanceof FileNotFoundException           => 'File not found',
+                    $e instanceof FileException                   => 'File processing error',
+
+                    // FALLBACK
+                    default                                       => 'Internal server error',
+                },
+                match (true) {
+
+                    // AUTH
+                    $e instanceof AuthenticationException        => 401,
+                    $e instanceof AuthorizationException,
+                    $e instanceof AccessDeniedHttpException       => 403,
+
+                    // ROUTE
+                    $e instanceof NotFoundHttpException,
+                    $e instanceof ModelNotFoundException          => 404,
+                    $e instanceof MethodNotAllowedHttpException   => 405,
+
+                    // VALIDATION
+                    $e instanceof ValidationException             => 422,
+                    $e instanceof BadRequestHttpException         => 400,
+                    $e instanceof ThrottleRequestsException       => 429,
+
+                    // DATA
+                    $e instanceof QueryException                  => 500,
+                    $e instanceof PDOException                    => 500,
+
+                    // DOMAIN
+                    $e instanceof DomainException                 => 422,
+
+                    default                                       => 500,
+                }
+            );
         });
     }
 }

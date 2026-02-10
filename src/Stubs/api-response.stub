@@ -1,8 +1,8 @@
 <?php
 
+
 namespace App\Support;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
@@ -10,7 +10,7 @@ use Throwable;
 
 class ApiResponse
 {
-    public static function success(mixed $data = null,string $message = 'The request has been processed successfully',int $status = 200,array $meta = [],array $links = []): JsonResponse 
+    public static function success(mixed $data = null, string $message = 'The request has been processed successfully', int $status = 200, array $meta = [], array $links = []): JsonResponse
     {
         return response()->json([
             'success'      => true,
@@ -22,20 +22,28 @@ class ApiResponse
         ], $status);
     }
 
-    public static function throw(string $messageException, string $message = 'The request could not be processed',int $status = 400,mixed $errors = null): JsonResponse 
-    {
-        Log::error($messageException);
+    public static function throw(
+        mixed $exception,
+        string $message = 'The request could not be processed',
+        int $status = 400,
+        mixed $errors = null
+    ): JsonResponse {
+        Log::error(
+            $exception instanceof \Throwable
+                ? $exception->getMessage()
+                : (string) $exception
+        );
 
-        if ($messageException instanceof MessageBag) {
-            $errors = $messageException->toArray();
-        } elseif ($messageException instanceof \Throwable) {
-            $errors = ['exception' => [$messageException->getMessage()]];
-        } elseif (is_array($messageException)) {
-            $errors = $messageException;
+        if ($exception instanceof MessageBag) {
+            $errors = $exception->toArray();
+        } elseif ($exception instanceof \Throwable) {
+            $errors = ['exception' => [$exception->getMessage()]];
+        } elseif (is_array($exception)) {
+            $errors = $exception;
         } else {
-            $errors = ['error' => [$messageException]];
+            $errors = ['error' => [$exception]];
         }
-      
+
         return response()->json([
             'success'      => false,
             'responseCode' => $status,
@@ -44,4 +52,3 @@ class ApiResponse
         ], $status);
     }
 }
-

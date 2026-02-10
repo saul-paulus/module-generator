@@ -2,44 +2,88 @@
 
 namespace App\Repositories\Repository\{{name}};
 
-use App\Repositories\Interfaces\{{name}}\{{name}}Interface;
 use App\Models\{{name}}Model;
+use App\Repositories\Interfaces\{{name}}\{{name}}Interface;
+
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class {{name}}Repository implements {{name}}Interface
 {
-   protected ${{name}}Model;
+   protected ${{lcfirst(name)}}Model;
 
-    public function __construct({{name}}Model ${{name}}Model)
+    public function __construct({{name}}Model ${{lcfirst(name)}}Model)
     {
-        $this->{{name}}Model = ${{name}}Model;
+        $this->{{lcfirst(name)}}Model = ${{lcfirst(name)}}Model;
     }
 
-    public function all()
+    /**
+     * Get all data
+     */
+    public function getAll(): Collection
     {
-        return $this->{{name}}Model->all();
+        return $this->authModel->all();
     }
 
-    public function find($id)
+    /**
+     * Get data by id
+     */
+    public function findById(int $id): ?Model
     {
-        return $this->{{name}}Model->find($id);
+        return $this->authModel->find($id);
     }
 
-    public function create(array $data)
+    /**
+     * Create new data
+     */
+    public function create(array $data): Model
     {
-        return $this->{{name}}Model->create($data);
+        return $this->authModel->create($data);
     }
 
-    public function update($id, array $data)
+    /**
+     * Update data by id
+     */
+    public function update(int $id, array $data): bool
     {
-        $item = $this->find($id);
-        if($item) $item->update($data);
-        return $item;
+        $model = $this->findById($id);
+
+        if (!$model) {
+            return false;
+        }
+
+        return $model->update($data);
     }
 
-    public function delete($id)
+    /**
+     * Delete data by id
+     */
+    public function delete(int $id): bool
     {
-        $item = $this->find($id);
-        if($item) $item->delete();
-        return $item;
+        $model = $this->findById($id);
+
+        if (!$model) {
+            return false;
+        }
+
+        return (bool) $model->delete();
+    }
+
+    /**
+     * Get data with conditions
+     */
+    public function findBy(array $conditions): Collection
+    {
+        return $this->authModel
+            ->where($conditions)
+            ->get();
+    }
+
+    /**
+     * Paginate data
+     */
+    public function paginate(int $perPage = 15)
+    {
+        return $this->authModel->paginate($perPage);
     }
 }

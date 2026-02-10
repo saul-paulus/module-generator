@@ -10,12 +10,10 @@ use Illuminate\Support\Facades\Route;
 | All routes are stateless & JSON only
 */
 
-Route::middleware(['force.json'])->prefix('v1')->group(function () {
 
-    Route::get('/health', function () {
-        return [
-            'status' => 'ok',
-            'timestamp' => now(),
-        ];
-    });
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/test', 'HandlerGett');
+    Route::get('/auths', 'HandlerGetAll');
+    Route::get('/auths/{id}', 'HandlerGetById');
+    Route::delete('/auths/{id}', 'HandlerDeleteById');
 });

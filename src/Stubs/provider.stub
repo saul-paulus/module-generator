@@ -12,10 +12,7 @@ class {{name}}ServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->bind(
-            {{name}}Interface::class, 
-            {{name}}Repository::class
-        );
+        $this->app->bind({{name}}Interface::class, {{name}}Repository::class);
     }
 
     public function boot()

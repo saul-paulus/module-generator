@@ -5,38 +5,126 @@ namespace App\Services\{{name}};
 
 use App\Repositories\Interfaces\{{name}}\{{name}}Interface;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class {{name}}Service
 {
-    protected ${{name}}Repository;
+    protected ${{lcfirst(name)}}Repository;
     
-    public function __construct({{name}}Interface ${{name}}Interface)
+    public function __construct({{name}}Interface ${{lcfirst(name)}}Interface)
     {
-        $this->{{name}}Repository = ${{name}}Interface;
+        $this->{{lcfirst(name)}}Repository = ${{lcfirst(name)}}Interface;
     }
 
-
-    public function all()
+    /**
+     * Get all data
+     */
+    public function getAll(): Collection
     {
-        return $this->{{name}}Repository->all();
+        return $this->AuthRepository->getAll();
     }
 
-    public function find($id)
+    /**
+     * Get data by id (with business check)
+     */
+    public function getById(int $id): Model
     {
-        return $this->{{name}}Repository->find($id);
+        $data = $this->AuthRepository->findById($id);
+
+        if (!$data) {
+            throw new ModelNotFoundException('Data not found');
+        }
+
+        return $data;
     }
 
-    public function create(array $data)
+    /**
+     * Create data with transaction & business rule
+     */
+    public function create(array $data): Model
     {
-        return $this->{{name}}Repository->create($data);
+        return DB::transaction(function () use ($data) {
+
+            // Example business validation
+            $this->validateCreate($data);
+
+            return $this->AuthRepository->create($data);
+        });
     }
 
-    public function update($id, array $data)
+    /**
+     * Update data
+     */
+    public function update(int $id, array $data): Model
     {
-        return $this->{{name}}Repository->update($id, $data);
+        return DB::transaction(function () use ($id, $data) {
+
+            $model = $this->getById($id);
+
+            $this->validateUpdate($model, $data);
+
+            $this->AuthRepository->update($id, $data);
+
+            return $this->getById($id);
+        });
     }
 
-    public function delete($id)
+    /**
+     * Delete with rule
+     */
+    public function delete(int $id): void
     {
-        return $this->{{name}}Repository->delete($id);
+        $model = $this->getById($id);
+
+        $this->validateDelete($model);
+
+        $this->AuthRepository->delete($id);
+    }
+
+    /**
+     * Find by condition (business-safe)
+     */
+    public function findBy(array $conditions): Collection
+    {
+        return $this->AuthRepository->findBy($conditions);
+    }
+
+    /**
+     * Pagination
+     */
+    public function paginate(int $perPage = 15)
+    {
+        return $this->AuthRepository->paginate($perPage);
+    }
+
+    /* =========================
+       BUSINESS RULES
+       ========================= */
+
+    protected function validateCreate(array $data): void
+    {
+        // Example:
+        // if (empty($data['status'])) {
+        //     throw new \DomainException('Status is required');
+        // }
+    }
+
+    protected function validateUpdate(Model $model, array $data): void
+    {
+        // Example:
+        // if ($model->status === 'CLOSED') {
+        //     throw new \DomainException('Data has been closed');
+        // }
+    }
+
+    protected function validateDelete(Model $model): void
+    {
+        // Example:
+        // if ($model->status === 'ACTIVE') {
+        //     throw new \DomainException('Active records cannot be deleted');
+        // }
     }
 }
