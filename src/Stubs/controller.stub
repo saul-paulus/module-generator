@@ -19,7 +19,7 @@ class {{name}}Controller extends Controller
 
     public function HandlerGetAll()
     {
-        $data = $this->authService->getAll();
+        $data = $this->{{nameVariable}}Service->getAll();
         $meta = [
             'count' => $data->count()
         ];
@@ -29,13 +29,13 @@ class {{name}}Controller extends Controller
 
     public function HandlerGetById(int $id)
     {
-        $data =  $this->authService->getById($id);
+        $data =  $this->{{nameVariable}}Service->getById($id);
         return ApiResponse::success($data);
     }
 
     public function HandlerDeleteById(int $id)
     {
-        $data =  $this->authService->delete($id);
+        $data =  $this->{{nameVariable}}Service->delete($id);
         return ApiResponse::success($data);
     }
 

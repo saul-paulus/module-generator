@@ -24,7 +24,7 @@ class {{name}}Service
      */
     public function getAll(): Collection
     {
-        return $this->AuthRepository->getAll();
+        return $this->{{nameVariable}}Repository->getAll();
     }
 
     /**
@@ -32,7 +32,7 @@ class {{name}}Service
      */
     public function getById(int $id): Model
     {
-        $data = $this->AuthRepository->findById($id);
+        $data = $this->{{nameVariable}}Repository->findById($id);
 
         if (!$data) {
             throw new ModelNotFoundException('Data not found');
@@ -51,7 +51,7 @@ class {{name}}Service
             // Example business validation
             $this->validateCreate($data);
 
-            return $this->AuthRepository->create($data);
+            return $this->{{nameVariable}}Repository->create($data);
         });
     }
 
@@ -66,7 +66,7 @@ class {{name}}Service
 
             $this->validateUpdate($model, $data);
 
-            $this->AuthRepository->update($id, $data);
+            $this->{{nameVariable}}Repository->update($id, $data);
 
             return $this->getById($id);
         });
@@ -81,7 +81,7 @@ class {{name}}Service
 
         $this->validateDelete($model);
 
-        $this->AuthRepository->delete($id);
+        $this->{{nameVariable}}Repository->delete($id);
     }
 
     /**
@@ -89,7 +89,7 @@ class {{name}}Service
      */
     public function findBy(array $conditions): Collection
     {
-        return $this->AuthRepository->findBy($conditions);
+        return $this->{{nameVariable}}Repository->findBy($conditions);
     }
 
     /**
@@ -97,7 +97,7 @@ class {{name}}Service
      */
     public function paginate(int $perPage = 15)
     {
-        return $this->AuthRepository->paginate($perPage);
+        return $this->{{nameVariable}}Repository->paginate($perPage);
     }
 
     /* =========================

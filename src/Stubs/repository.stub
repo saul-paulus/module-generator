@@ -22,7 +22,7 @@ class {{name}}Repository implements {{name}}Interface
      */
     public function getAll(): Collection
     {
-        return $this->authModel->all();
+        return $this->{{nameVariable}}Model->all();
     }
 
     /**
@@ -30,7 +30,7 @@ class {{name}}Repository implements {{name}}Interface
      */
     public function findById(int $id): ?Model
     {
-        return $this->authModel->find($id);
+        return $this->{{nameVariable}}Model->find($id);
     }
 
     /**
@@ -38,7 +38,7 @@ class {{name}}Repository implements {{name}}Interface
      */
     public function create(array $data): Model
     {
-        return $this->authModel->create($data);
+        return $this->{{nameVariable}}Model->create($data);
     }
 
     /**
@@ -74,7 +74,7 @@ class {{name}}Repository implements {{name}}Interface
      */
     public function findBy(array $conditions): Collection
     {
-        return $this->authModel
+        return $this->{{nameVariable}}Model
             ->where($conditions)
             ->get();
     }
@@ -84,6 +84,6 @@ class {{name}}Repository implements {{name}}Interface
      */
     public function paginate(int $perPage = 15)
     {
-        return $this->authModel->paginate($perPage);
+        return $this->{{nameVariable}}Model->paginate($perPage);
     }
 }
