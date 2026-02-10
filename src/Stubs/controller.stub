@@ -17,13 +17,6 @@ class {{name}}Controller extends Controller
         $this->{{nameVariable}}Service = ${{nameVariable}}Service;
     }
 
-    public function HandlerGetTest()
-    {
-        $rest = $this->authService->tesAuth();
-
-        return ApiResponse::success($rest, 'The request has been processed successfully', 200);
-    }
-
     public function HandlerGetAll()
     {
         $data = $this->authService->getAll();
