@@ -78,7 +78,7 @@ Install via Composer:
 composer require ixspx/module-generator
 ```
 
-## ⚙ Manual Provider Registration (Optional)
+## ⚙ Manual Provider Registration
 
 If package discovery is disabled, register the provider manually in bootstrap/providers.php:
 
@@ -91,7 +91,41 @@ If package discovery is disabled, register the provider manually in bootstrap/pr
 
 ## 🛠 Usage
 
-Generate a Module
+#### Generate Standard API Structure
+
+Run the following command to generate the standard API structure:
+
+```
+  php artisan make:api-install
+```
+
+You may add the --force option to overwrite existing API files.
+
+After running make:api-install, you must manually register the API configuration in bootstrap/app.php:
+
+```
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__ . '/../routes/web.php',
+        commands: __DIR__ . '/../routes/console.php',
+        health: '/up',
+        then: function ($router) {
+            Route::prefix('api/v1')
+                ->group(base_path('routes/api.php'));
+        }
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(ForceJsonResponse::class);
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        ApiExceptionRegistrar::register($exceptions);
+    })->create();
+
+```
+
+#### Generate a Module
+
+Generate a new module using the following command:
 
 ```
   php artisan make:mod {{nameModule}}
@@ -103,9 +137,11 @@ Example:
 php artisan make:mod OrderPayment
 ```
 
-This will generate the full module structure using the layered architecture described above.
+This command will generate a complete module structure based on the predefined layered architecture.
 
-Generate API Response Helper
+#### OR Generate API Response Helper
+
+To generate the API response helper, run:
 
 ```
 php artisan make:api-response
