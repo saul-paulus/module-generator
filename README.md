@@ -101,6 +101,8 @@ Run the following command to generate the standard API structure:
 
 You may add the --force option to overwrite existing API files.
 
+##### Register API Configuration
+
 After running make:api-install, you must manually register the API configuration in bootstrap/app.php:
 
 ```
@@ -142,7 +144,14 @@ Example:
 php artisan make:mod OrderPayment
 ```
 
-This command will generate a complete module structure based on the predefined layered architecture.
+After the command finished, you will see a notification simillar to the flowing:
+
+![alt text](image.png)
+
+##### ⚠️ Important:
+
+You must register the generated module service provider manually in bootstrap/providers.php.
+This command generates a complete module structure based on a predefined layered architecture (Controller, Service, Repository, Interface, etc.).
 
 #### OR Generate API Response Helper
 
