@@ -16,6 +16,8 @@ Generate a complete module structure in Laravel, including:
 
 ## 🏗 Architecture Overview
 
+### Generate Module
+
 Generated modules follow a layered service–repository architecture:
 
 ```
@@ -44,26 +46,77 @@ ModuleName/
     └── ModuleNameServiceProvider.php
 ```
 
+### Generate Standard API
+
+This package provides a standardized API foundation for Laravel applications by implementing a Centralized API Response & Exception Handling Pattern.
+All HTTP responses are forced into a unified JSON format, and all exceptions are handled in a single, centralized layer, ensuring consistency across the entire application.
+High-level flow
+
+```
+Exceptions → Middleware / Exception Handler → Global API Response
+
+```
+
+#### ✨ Key Features
+
+✅ Unified JSON response structure
+✅ Centralized exception handling
+✅ Opinionated API contract (consistent success & error responses)
+✅ Middleware-based response enforcement
+✅ Framework-agnostic business logic (HTTP-agnostic services)
+✅ Suitable for packages, microservices, and large-scale APIs
+
 ## 🧠 Architectural Principles
 
-Each layer has a single responsibility:
+This package follows Clean Architecture–inspired layering, where each layer has a single and well-defined responsibility.
 
 1. Model
    Represents the database table (Eloquent ORM).
-
+   ❌ No business logic
+   ❌ No complex queries
 2. Repository + Interface
-   Encapsulates all database access logic.
+   Encapsulates all data access logic and abstracts the persistence layer.
+   - Defines contracts via interfaces
+   - Implements database queries (Eloquent, Query Builder, etc.)
+
+   Benefits:
+   ✅ Enables easy testing (mocking repositories)
+   ✅ Allows swapping data sources without affecting business logic 3. Service
 
 3. Service
-   Contains business rules and application logic.
+   Contains business rules and application use cases.
+   Responsibilities:
+   - Orchestrates workflows
+   - Applies domain validation
+
+   Throws domain-specific exceptions
+   ✅ HTTP-agnostic
+   ❌ No request / response handling
+   ❌ No direct database queries
 
 4. Controller
-   Handles HTTP requests and responses.
+   Acts as the delivery layer.
+   Responsibilities:
+   - Receives HTTP requests.
+   - Delegates execution to services.
+   - Returns standardized API responses.
+
+   Controllers remain thin and predictable.
 
 5. Service Provider
-   Binds interfaces to concrete implementations.
+   Responsible for dependency injection configuration.
+   - Binds interfaces to concrete implementations.
+   - Registers package services, middleware, and handlers.
 
-This approach results in testable, decoupled, and scalable code.
+   This ensures loose coupling and extensibility.
+
+### Centralized Exception Handling
+
+    All exceptions—framework, validation, authorization, or domain-specific—are handled in a single place and transformed into a standardized API response.
+    This pattern is also known as:
+    - Exception-to-Response Mapping.
+    - API Response Envelope Pattern.
+    - Opinionated API Layer.
 
 ## Requirements
 
