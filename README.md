@@ -59,12 +59,12 @@ Exceptions → Middleware / Exception Handler → Global API Response
 
 #### ✨ Key Features
 
-✅ Unified JSON response structure
-✅ Centralized exception handling
-✅ Opinionated API contract (consistent success & error responses)
-✅ Middleware-based response enforcement
-✅ Framework-agnostic business logic (HTTP-agnostic services)
-✅ Suitable for packages, microservices, and large-scale APIs
+- ✅ Unified JSON response structure
+- ✅ Centralized exception handling
+- ✅ Opinionated API contract (consistent success & error responses)
+- ✅ Middleware-based response enforcement
+- ✅ Framework-agnostic business logic (HTTP-agnostic services)
+- ✅ Suitable for packages, microservices, and large-scale APIs
 
 ## 🧠 Architectural Principles
 
@@ -72,16 +72,16 @@ This package follows Clean Architecture–inspired layering, where each layer ha
 
 1. Model
    Represents the database table (Eloquent ORM).
-   ❌ No business logic
-   ❌ No complex queries
+   - ❌ No business logic
+   - ❌ No complex queries
 2. Repository + Interface
    Encapsulates all data access logic and abstracts the persistence layer.
    - Defines contracts via interfaces
    - Implements database queries (Eloquent, Query Builder, etc.)
 
    Benefits:
-   ✅ Enables easy testing (mocking repositories)
-   ✅ Allows swapping data sources without affecting business logic 3. Service
+   - ✅ Enables easy testing (mocking repositories)
+   - ✅ Allows swapping data sources without affecting business logic 3. Service
 
 3. Service
    Contains business rules and application use cases.
@@ -90,9 +90,9 @@ This package follows Clean Architecture–inspired layering, where each layer ha
    - Applies domain validation
 
    Throws domain-specific exceptions
-   ✅ HTTP-agnostic
-   ❌ No request / response handling
-   ❌ No direct database queries
+   - ✅ HTTP-agnostic
+   - ❌ No request / response handling
+   - ❌ No direct database queries
 
 4. Controller
    Acts as the delivery layer.
@@ -112,8 +112,9 @@ This package follows Clean Architecture–inspired layering, where each layer ha
 
 ### Centralized Exception Handling
 
-    All exceptions—framework, validation, authorization, or domain-specific—are handled in a single place and transformed into a standardized API response.
-    This pattern is also known as:
+All exceptions—framework, validation, authorization, or domain-specific—are handled in a single place and transformed into a standardized API response.
+This pattern is also known as:
+
     - Exception-to-Response Mapping.
     - API Response Envelope Pattern.
     - Opinionated API Layer.
