@@ -1,4 +1,4 @@
-# Laravel Module Generator & API Foundation (`ixspx/module-generator`)
+# Laravel Module Generator & API Foundation
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/ixspx/module-generator.svg?style=flat-square)](https://packagist.org/packages/ixspx/module-generator)
 [![PHP Version](https://img.shields.io/badge/PHP-%5E8.2%20%7C%7C%20%5E8.3-8892BF.svg?style=flat-square)](https://www.php.net/)
