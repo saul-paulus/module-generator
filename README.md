@@ -21,10 +21,10 @@ Generate a complete module structure in Laravel, including:
 Generated modules follow a layered service–repository architecture:
 
 ```
-ModuleName/
+Laravel Application
 ├── Models/
-│   └── ModuleName.php
-│
+|   └── ModuleName/
+│       └── ModuleNameModel.php
 ├── Repositories/
 │   ├── Interfaces/
 │   │   └── ModuleName/
