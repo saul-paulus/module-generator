@@ -166,15 +166,15 @@ app/
 composer require ixspx/module-generator
 ```
 
-### Publish Configuration & Stubs (Customization)
+### Publish Configuration & Stubs (Optional)
 
-Publish the configuration file to customize package settings and stubs to customize generated code templates:
+Publishing the configuration file and stubs is **completely optional**. The package functions zero-config out of the box with sensible defaults (Standard REST driver, auto-registration enabled).
 
 ```bash
-# Publish configuration file to config/module-generator.php
+# Publish configuration file to config/module-generator.php (Optional)
 php artisan vendor:publish --tag=module-generator-config
 
-# Publish template stubs to stubs/module-generator/
+# Publish template stubs to stubs/module-generator/ (Optional)
 php artisan vendor:publish --tag=module-generator-stubs
 ```
 
@@ -186,20 +186,70 @@ php artisan vendor:publish --tag=module-generator-stubs
 
 ## 8. Configuration
 
+> [!NOTE]
+> **Zero-Config Behavior**: You do **NOT** need to create or publish `config/module-generator.php` for the package to work. The package automatically merges internal default configuration via `$this->mergeConfigFrom(...)`.
+> 
+> The file `config/module-generator.php` will only appear in your host application's `config/` directory **after** you run `php artisan vendor:publish --tag=module-generator-config`.
+
+### Configuration Structure (`config/module-generator.php`)
+
 ```php
-// config/module-generator.php
 return [
-    // Driver: 'rest', 'jsonapi', 'problem-details', or custom class name
+    /*
+    |--------------------------------------------------------------------------
+    | Default API Specification Driver
+    |--------------------------------------------------------------------------
+    |
+    | Supported Drivers out of the box:
+    |   - 'rest'            : Standard REST Envelope (default)
+    |   - 'jsonapi'         : Official JSON:API 1.1 Specification (jsonapi.org)
+    |   - 'problem-details' : RFC 7807 Problem Details Specification
+    |   - Custom Class Name : Any class implementing ApiSpecificationInterface
+    |
+    */
     'api_specification' => env('API_SPECIFICATION', 'rest'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | JSON:API 1.1 Specification Options
+    |--------------------------------------------------------------------------
+    */
     'jsonapi' => [
         'version'  => '1.1',
         'base_url' => env('APP_URL', 'http://localhost'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | RFC 7807 Problem Details Options
+    |--------------------------------------------------------------------------
+    */
     'problem_details' => [
         'type_base_url' => env('APP_URL', 'http://localhost') . '/errors',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Database Table Prefix
+    |--------------------------------------------------------------------------
+    */
+    'table_prefix' => '',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Controller Action Naming Style
+    |--------------------------------------------------------------------------
+    | Options: 'restful' (index, show, store, update, destroy), 'handler'
+    */
+    'controller_style' => 'restful',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Automatic Registration Options
+    |--------------------------------------------------------------------------
+    */
+    'auto_register_provider' => true,
+    'auto_register_route'    => true,
 ];
 ```
 
