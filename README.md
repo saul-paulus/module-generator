@@ -303,11 +303,27 @@ Modifications made to `.stub` files in `stubs/module-generator/` will automatica
 
 ## 15. Limitations & Solutions
 
-- **Table Prefix Flexibility**: Solved via `config/module-generator.php` and `--table-prefix=` CLI option.
-- **Provider Registration**: Solved via automatic `ProviderRegistrar` insertion and container fallback auto-binding.
-- **RESTful Naming**: Solved via standard RESTful controller stubs with `--style=handler` legacy support.
-- **Stub Publishing**: Solved via `php artisan vendor:publish --tag=module-generator-stubs`.
-- **Route Generation**: Solved via automatic `RouteRegistrar` appending.
+The package has addressed previous limitations through robust, configurable architectural solutions:
+
+1. **Table Prefix & Naming Flexibility**:
+   - *Previous Issue*: `model.stub` hardcoded `protected $table = 'tbl_{{name}}';` and stub replacement tokens did not match, resulting in unintended table names like `tbl_OrderPayment`.
+   - *Solution*: `model.stub` now uses `protected $table = '{{table_prefix}}{{table_name}}';`. Table naming conventions and custom prefixes can be set globally in `config/module-generator.php` or customized per-command using CLI flags (`--table=payments --table-prefix=tbl_`).
+
+2. **Automated Provider Registration & Container Auto-Binding**:
+   - *Previous Issue*: Scaffolded module providers required manual entry into `bootstrap/providers.php` or `config/app.php`.
+   - *Solution*: Integrated `ProviderRegistrar` helper to automatically register scaffolded providers. Additionally, `ModuleGeneratorServiceProvider` features container fallback auto-binding (`App\Repositories\Interfaces\*` $\rightarrow$ `App\Repositories\Repository\*`), allowing modules generated with `--no-provider` to resolve dependencies seamlessly.
+
+3. **Standard RESTful Controller Action Naming**:
+   - *Previous Issue*: Generated controllers used opinionated action names (`HandlerGetAll`, `HandlerGetById`, `HandlerDeleteById`).
+   - *Solution*: Controllers default to standard Laravel RESTful action verbs (`index`, `show`, `store`, `update`, `destroy`). Legacy handler naming remains supported via `--style=handler` and `config('module-generator.controller_style')`.
+
+4. **Custom Stub Publishing Support**:
+   - *Previous Issue*: Code templates were internal (`src/Stubs/`) and could not be customized for team conventions.
+   - *Solution*: Added `ResolvesStubs` trait and registered `module-generator-stubs` publish tag (`php artisan vendor:publish --tag=module-generator-stubs`). Local stubs in `stubs/module-generator/` automatically override internal package defaults.
+
+5. **Automated API Route Scaffolding**:
+   - *Previous Issue*: Module generation created domain layers but required manual route entry in `routes/api.php`.
+   - *Solution*: Integrated `RouteRegistrar` helper to automatically append RESTful resource routes (`Route::apiResource(...)`) to `routes/api.php`. Opt-out available via `--no-route`.
 
 ---
 
