@@ -36,22 +36,27 @@
 ## 1. Project Overview
 
 ### What is this package?
+
 `ixspx/module-generator` is a dual-purpose Laravel package:
+
 1. **Module Scaffolder (`make:mod`)**: Generates modular domain layers adhering to a Service-Repository pattern, providing separation of database concerns, domain business logic, HTTP delivery, and dependency injection.
 2. **API Infrastructure Starter (`make:api-install` & `make:api-response`)**: Provisions a unified JSON response envelope, middleware to force JSON headers, and a centralized exception handler to translate framework, validation, domain, and database exceptions into consistent JSON payloads.
 
 ### What problems does it solve?
+
 - **Monolithic Controller Bloat**: Prevents controllers from containing database queries, transaction management, or raw business logic.
 - **Inconsistent API Payloads**: Eliminates divergent API response formats across different endpoints and developers.
 - **Scattered Exception Handling**: Replaces ad-hoc `try-catch` blocks inside controllers with a global, centralized exception registrar.
 - **Boilerplate Fatigue**: Eliminates manual creation of Interfaces, Repositories, Services, and Providers for every new feature domain.
 
 ### Who should use it?
+
 - **Enterprise Engineering Teams**: Teams building large-scale, multi-domain Laravel applications or microservices requiring strict architectural governance.
 - **API Developers**: Engineers building SPA backends, mobile app APIs, or public web services that demand standardized REST JSON envelopes.
 - **Clean Architecture Advocates**: Developers who value loose coupling, testability (mockable repositories), and HTTP-agnostic domain services.
 
 ### Why does it exist?
+
 Standard Laravel defaults mix HTTP handling and Eloquent models closely. `ixspx/module-generator` bridges the gap between fast scaffolding and enterprise architectural discipline, enabling developers to bootstrap maintainable, decoupled domain modules in seconds.
 
 ---
@@ -179,17 +184,17 @@ routes/
 
 ### Class Responsibilities Matrix
 
-| Generated Class | Architectural Layer | Primary Responsibility |
-| :--- | :--- | :--- |
-| **`{Name}Controller`** | Delivery (HTTP) | Receives HTTP requests, calls domain service methods, constructs `ApiResponse::success()` payloads. Thin and predictable. |
-| **`{Name}Service`** | Application / Business | Encapsulates domain logic, executes database operations within `DB::transaction()`, performs domain checks, throws domain exceptions. |
-| **`{Name}Interface`** | Data Abstraction | Declares data access signatures (`getAll`, `findById`, `create`, `update`, `delete`, `findBy`, `paginate`). |
-| **`{Name}Repository`** | Persistence (Data) | Implements `{Name}Interface` using Eloquent ORM queries on `{Name}Model`. |
-| **`{Name}Model`** | Domain / Data | Extends `Illuminate\Database\Eloquent\Model`. Maps to the underlying database table and fillable properties. |
-| **`{Name}ServiceProvider`**| Infrastructure | Binds `{Name}Interface` to `{Name}Repository` in the Laravel Service Container. |
-| **`ApiResponse`** | Cross-Cutting Support | Static utility formatting standard success envelopes and logging error stack traces. |
-| **`ForceJsonResponse`** | HTTP Middleware | Guarantees clients receive JSON even if headers were omitted in HTTP requests. |
-| **`ApiExceptionRegistrar`**| Exception Handling | Intercepts framework/system exceptions and renders formatted `ApiResponse::throw()` responses. |
+| Generated Class             | Architectural Layer    | Primary Responsibility                                                                                                                |
+| :-------------------------- | :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| **`{Name}Controller`**      | Delivery (HTTP)        | Receives HTTP requests, calls domain service methods, constructs `ApiResponse::success()` payloads. Thin and predictable.             |
+| **`{Name}Service`**         | Application / Business | Encapsulates domain logic, executes database operations within `DB::transaction()`, performs domain checks, throws domain exceptions. |
+| **`{Name}Interface`**       | Data Abstraction       | Declares data access signatures (`getAll`, `findById`, `create`, `update`, `delete`, `findBy`, `paginate`).                           |
+| **`{Name}Repository`**      | Persistence (Data)     | Implements `{Name}Interface` using Eloquent ORM queries on `{Name}Model`.                                                             |
+| **`{Name}Model`**           | Domain / Data          | Extends `Illuminate\Database\Eloquent\Model`. Maps to the underlying database table and fillable properties.                          |
+| **`{Name}ServiceProvider`** | Infrastructure         | Binds `{Name}Interface` to `{Name}Repository` in the Laravel Service Container.                                                       |
+| **`ApiResponse`**           | Cross-Cutting Support  | Static utility formatting standard success envelopes and logging error stack traces.                                                  |
+| **`ForceJsonResponse`**     | HTTP Middleware        | Guarantees clients receive JSON even if headers were omitted in HTTP requests.                                                        |
+| **`ApiExceptionRegistrar`** | Exception Handling     | Intercepts framework/system exceptions and renders formatted `ApiResponse::throw()` responses.                                        |
 
 ---
 
@@ -214,6 +219,7 @@ This package enforces established software engineering design patterns:
 ## 6. Installation
 
 ### Requirements
+
 - **PHP**: `^8.2` or `^8.3`
 - **Laravel**: `^10.0`, `^11.0`, `^12.0`, or `^13.0`
 
@@ -251,7 +257,7 @@ Run the installation command to generate API middleware, response helpers, and e
 php artisan make:api-install
 ```
 
-*(Use `--force` to overwrite any existing foundation files).*
+_(Use `--force` to overwrite any existing foundation files)._
 
 ### Step 2: Register Middleware & Exception Handling (Laravel 11+)
 
@@ -291,11 +297,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
 ## 8. Available Artisan Commands
 
-| Command | Signature | Description | Key Generated Files | Example Usage |
-| :--- | :--- | :--- | :--- | :--- |
-| **Module Generator** | `make:mod {name}` | Generates a complete 6-layer module structure. | Model, Interface, Repository, Service, Controller, Provider | `php artisan make:mod OrderPayment` |
-| **API Installer** | `make:api-install {--force}` | Installs standard API foundation infrastructure. | `routes/api.php`, `ForceJsonResponse.php`, `ApiResponse.php`, `ApiExceptionRegistrar.php` | `php artisan make:api-install --force` |
-| **API Response Helper** | `make:api-response` | Scaffolds only the `ApiResponse` support class. | `app/Support/ApiResponse.php` | `php artisan make:api-response` |
+| Command                 | Signature                    | Description                                      | Key Generated Files                                                                       | Example Usage                          |
+| :---------------------- | :--------------------------- | :----------------------------------------------- | :---------------------------------------------------------------------------------------- | :------------------------------------- |
+| **Module Generator**    | `make:mod {name}`            | Generates a complete 6-layer module structure.   | Model, Interface, Repository, Service, Controller, Provider                               | `php artisan make:mod OrderPayment`    |
+| **API Installer**       | `make:api-install {--force}` | Installs standard API foundation infrastructure. | `routes/api.php`, `ForceJsonResponse.php`, `ApiResponse.php`, `ApiExceptionRegistrar.php` | `php artisan make:api-install --force` |
+| **API Response Helper** | `make:api-response`          | Scaffolds only the `ApiResponse` support class.  | `app/Support/ApiResponse.php`                                                             | `php artisan make:api-response`        |
 
 ---
 
@@ -336,7 +342,7 @@ When running `php artisan make:mod OrderPayment`:
     {
       "id": 1,
       "order_number": "ORD-2026-001",
-      "amount": 150.00,
+      "amount": 150.0,
       "status": "PAID"
     }
   ],
@@ -357,9 +363,7 @@ When running `php artisan make:mod OrderPayment`:
   "responseCode": 422,
   "message": "Validation error",
   "errors": {
-    "amount": [
-      "The amount field is required."
-    ]
+    "amount": ["The amount field is required."]
   }
 }
 ```
@@ -368,18 +372,18 @@ When running `php artisan make:mod OrderPayment`:
 
 `ApiExceptionRegistrar` automatically translates exceptions into status codes and human-readable messages:
 
-| Exception Class | Translated Message | HTTP Status |
-| :--- | :--- | :--- |
-| `AuthenticationException` | `Unauthenticated` | **401** |
-| `AuthorizationException` / `AccessDeniedHttpException` | `Forbidden` / `Access denied` | **403** |
-| `NotFoundHttpException` / `ModelNotFoundException` | `Route not found` / `Data not found` | **404** |
-| `MethodNotAllowedHttpException` | `Method not allowed` | **405** |
-| `BadRequestHttpException` | `Bad request` | **400** |
-| `ThrottleRequestsException` | `Too many requests` | **429** |
-| `ValidationException` | `Validation error` | **422** |
-| `DomainException` | `$e->getMessage()` | **422** |
-| `QueryException` / `PDOException` | `Database error` / `Database connection error` | **500** |
-| `Throwable` (Unhandled Fallback) | `Internal server error` | **500** |
+| Exception Class                                        | Translated Message                             | HTTP Status |
+| :----------------------------------------------------- | :--------------------------------------------- | :---------- |
+| `AuthenticationException`                              | `Unauthenticated`                              | **401**     |
+| `AuthorizationException` / `AccessDeniedHttpException` | `Forbidden` / `Access denied`                  | **403**     |
+| `NotFoundHttpException` / `ModelNotFoundException`     | `Route not found` / `Data not found`           | **404**     |
+| `MethodNotAllowedHttpException`                        | `Method not allowed`                           | **405**     |
+| `BadRequestHttpException`                              | `Bad request`                                  | **400**     |
+| `ThrottleRequestsException`                            | `Too many requests`                            | **429**     |
+| `ValidationException`                                  | `Validation error`                             | **422**     |
+| `DomainException`                                      | `$e->getMessage()`                             | **422**     |
+| `QueryException` / `PDOException`                      | `Database error` / `Database connection error` | **500**     |
+| `Throwable` (Unhandled Fallback)                       | `Internal server error`                        | **500**     |
 
 ---
 
@@ -388,11 +392,13 @@ When running `php artisan make:mod OrderPayment`:
 ### End-to-End Workflow: Scaffolding an `OrderPayment` Module
 
 #### Step 1: Run Module Generator Command
+
 ```bash
 php artisan make:mod OrderPayment
 ```
 
 #### Step 2: Register Generated Module Provider
+
 Add the generated provider to `bootstrap/providers.php`:
 
 ```php
@@ -404,6 +410,7 @@ return [
 ```
 
 #### Step 3: Define Routes in `routes/api.php`
+
 ```php
 use App\Http\Controllers\OrderPayment\OrderPaymentController;
 use Illuminate\Support\Facades\Route;
@@ -416,6 +423,7 @@ Route::controller(OrderPaymentController::class)->group(function () {
 ```
 
 #### Step 4: Customize Business Service (`app/Services/OrderPayment/OrderPaymentService.php`)
+
 ```php
 namespace App\Services\OrderPayment;
 
@@ -436,6 +444,7 @@ class OrderPaymentService
 ```
 
 #### Step 5: Execute HTTP Requests
+
 Send a GET request to `/api/v1/payments`:
 
 ```bash
@@ -485,6 +494,7 @@ curl -X GET http://localhost:8000/api/v1/payments \
 ## 13. Extensibility
 
 ### Extending Repositories
+
 Add custom data queries to `{Name}Interface` and implement them in `{Name}Repository`:
 
 ```php
@@ -499,6 +509,7 @@ public function findByTransactionId(string $transactionId): ?Model
 ```
 
 ### Adding Domain Exception Mappings
+
 Extend `app/Exceptions/ApiExceptionRegistrar.php` to handle custom domain exceptions:
 
 ```php
@@ -559,16 +570,3 @@ Please ensure your code complies with PSR-12 formatting rules and includes passi
 ## 18. License
 
 This package is open-source software licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more information.
-
----
-
-## Documentation Review Summary
-
-- **Missing Documentation**: The original documentation lacked technical details regarding `ApiExceptionRegistrar` exception mapping rules, `ForceJsonResponse` middleware headers, `ApiResponse::throw()` behavior, dependency injection configuration, and step-by-step configuration for Laravel 11/12 (`bootstrap/app.php`).
-- **Incorrect Documentation**: The original README claimed support for PHP `>= 8.1` and Laravel 9, whereas `composer.json` mandates PHP `^8.2 || ^8.3` and Illuminate `^10.0 || ^11.0 || ^12.0 || ^13.0`.
-- **Outdated Documentation**: Previous documentation referenced obsolete class paths and omitted manual provider registration requirements for scaffolded modules.
-- **Architectural Inconsistencies**:
-  - `ModuleGeneratorMakeCommand.php` attempts to perform `$content = str_replace('{{table_name}}', ...)` on `model.stub`, but `model.stub` hardcodes `protected $table = 'tbl_{{name}}';` instead of containing the `{{table_name}}` placeholder.
-  - `ModuleGeneratorTest.php` asserts file paths `{$name}.php` and `{$name}RepositoryInterface.php`, whereas `ModuleGeneratorMakeCommand.php` actually generates `{$name}Model.php` and `{$name}Interface.php`.
-- **Suggested Improvements**: Fix stub placeholder tokens in `model.stub`, align test file assertions with actual generated class filenames, implement `vendor:publish` for stubs, and automate module service provider registration.
-- **Overall Documentation Quality Score**: **9.5 / 10** (Comprehensive, technically verified, enterprise-ready GitHub documentation).
