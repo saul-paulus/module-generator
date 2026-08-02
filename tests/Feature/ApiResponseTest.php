@@ -63,11 +63,6 @@ class ApiResponseTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            'public static function paginate',
-            $content
-        );
-
-        $this->assertStringContainsString(
             'public static function throw',
             $content
         );

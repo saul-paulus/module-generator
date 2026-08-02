@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-
 namespace Ixspx\ModuleGenerator\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Ixspx\ModuleGenerator\Traits\ResolvesStubs;
 
 class ApiInstallCommand extends Command
 {
-    protected $signature = 'make:api-install {--force}';
+    use ResolvesStubs;
+
+    protected $signature = 'make:api-install {--force : Overwrite existing API starter files}';
     protected $description = 'Install API starter (route, middleware, response helper)';
 
     protected Filesystem $files;
@@ -34,7 +36,7 @@ class ApiInstallCommand extends Command
         return self::SUCCESS;
     }
 
-    protected  function installFiles(array $map): void
+    protected function installFiles(array $map): void
     {
         foreach ($map as $stub => $destination) {
             if ($this->files->exists($destination) && !$this->option('force')) {
@@ -42,7 +44,7 @@ class ApiInstallCommand extends Command
                 continue;
             }
 
-            $stubFile = $this->stubPath($stub);
+            $stubFile = $this->getStubPath($stub);
 
             if (!$this->files->exists($stubFile)) {
                 $this->error("Stub not found: {$stub}");
@@ -54,10 +56,5 @@ class ApiInstallCommand extends Command
 
             $this->line("✔ Installed: {$destination}");
         }
-    }
-
-    protected function stubPath(string $file): string
-    {
-        return __DIR__ . "/../../Stubs/{$file}";
     }
 }

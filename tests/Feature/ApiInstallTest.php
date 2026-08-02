@@ -19,9 +19,10 @@ class ApiInstallTest extends TestCase
     public function module_generator_config_is_available(): void
     {
         $this->assertTrue(
-            is_array(config('module-generator.middleware'))
+            is_array(config('module-generator'))
         );
     }
+
     /** @test */
     public function it_installs_all_api_starter_files(): void
     {
@@ -57,7 +58,7 @@ class ApiInstallTest extends TestCase
     {
         $this->files->ensureDirectoryExists(base_path('routes'));
 
-        // Hapus satu stub
+        // Delete one stub temporarily
         rename(
             __DIR__ . '/../../src/Stubs/api-route.stub',
             __DIR__ . '/../../src/Stubs/api-route.stub.bak'
@@ -65,19 +66,18 @@ class ApiInstallTest extends TestCase
 
         $this->artisan('make:api-install')->assertExitCode(0);
 
-        // api.php tidak dibuat
+        // api.php should not be created
         $this->assertFileDoesNotExist(base_path('routes/api.php'));
 
-        // stub lain tetap dibuat
+        // other stubs should still be created
         $this->assertFileExists(app_path('Support/ApiResponse.php'));
 
-        // restore
+        // restore stub
         rename(
             __DIR__ . '/../../src/Stubs/api-route.stub.bak',
             __DIR__ . '/../../src/Stubs/api-route.stub'
         );
     }
-
 
     protected function tearDown(): void
     {

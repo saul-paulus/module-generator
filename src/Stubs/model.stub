@@ -4,10 +4,9 @@ namespace App\Models\{{name}};
 
 use Illuminate\Database\Eloquent\Model;
 
-
 class {{name}}Model extends Model
 {
-    protected $table = 'tbl_{{name}}';
+    protected $table = '{{table_prefix}}{{table_name}}';
 
     protected $fillable = [
         // Add your fillable fields here
