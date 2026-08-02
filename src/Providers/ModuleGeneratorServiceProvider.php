@@ -8,12 +8,18 @@ use Illuminate\Support\ServiceProvider;
 use Ixspx\ModuleGenerator\Console\Commands\ApiInstallCommand;
 use Ixspx\ModuleGenerator\Console\Commands\ApiResponseMakeCommand;
 use Ixspx\ModuleGenerator\Console\Commands\ModuleGeneratorMakeCommand;
+use Ixspx\ModuleGenerator\Factories\ApiSpecificationFactory;
 
 final class ModuleGeneratorServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/module-generator.php', 'module-generator');
+
+        // Singleton binding for ApiSpecificationFactory
+        $this->app->singleton(ApiSpecificationFactory::class, function ($app) {
+            return new ApiSpecificationFactory($app);
+        });
 
         // Convention-Based Interface-to-Repository Auto-Binding Fallback
         $this->app->beforeResolving(function ($abstract, $parameters, $app) {

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Middleware;
+declare(strict_types=1);
+
+namespace Ixspx\ModuleGenerator\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -15,15 +17,19 @@ final class ForceJsonResponse
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $specification = app(ApiSpecificationFactory::class)->make();
+        /** @var ApiSpecificationFactory $factory */
+        $factory = app(ApiSpecificationFactory::class);
+        $specification = $factory->make();
         $mediaType = $specification->getMediaType();
 
+        // Force Accept header if not explicitly set
         if (!$request->headers->has('Accept')) {
             $request->headers->set('Accept', $mediaType);
         }
 
         $response = $next($request);
 
+        // If already JsonResponse, ensure Content-Type header matches specification
         if ($response instanceof JsonResponse) {
             if (!$response->headers->has('Content-Type')) {
                 $response->headers->set('Content-Type', $mediaType);
@@ -31,6 +37,7 @@ final class ForceJsonResponse
             return $response;
         }
 
+        // Convert non-JSON response safely
         return response()->json(
             $response->getContent(),
             $response->getStatusCode(),
