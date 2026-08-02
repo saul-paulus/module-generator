@@ -166,12 +166,21 @@ app/
 composer require ixspx/module-generator
 ```
 
-### Publish Configuration & Stubs
+### Publish Configuration & Stubs (Customization)
+
+Publish the configuration file to customize package settings and stubs to customize generated code templates:
 
 ```bash
+# Publish configuration file to config/module-generator.php
 php artisan vendor:publish --tag=module-generator-config
+
+# Publish template stubs to stubs/module-generator/
 php artisan vendor:publish --tag=module-generator-stubs
 ```
+
+> [!TIP]
+> - **`module-generator-config`**: Allows you to customize global package behavior, such as switching API specifications (`rest`, `jsonapi`, `problem-details`), setting table prefixes, selecting controller action styles (`restful` vs `handler`), and toggling automatic route/provider registration.
+> - **`module-generator-stubs`**: Copies all generator code templates to `stubs/module-generator/` in your application. Any changes made to these local stub files will automatically override internal package defaults, allowing complete control over generated class structures.
 
 ---
 
