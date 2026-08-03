@@ -45,7 +45,7 @@ class ModuleGeneratorTest extends TestCase
         $modelPath = app_path("Models/{$this->module}/{$this->module}Model.php");
         $content = file_get_contents($modelPath);
 
-        $this->assertStringContainsString("protected \$table = 'test_users';", $content);
+        $this->assertStringContainsString("protected string \$table = 'test_users';", $content);
     }
 
     public function test_it_supports_custom_table_prefix_and_name(): void
@@ -60,7 +60,7 @@ class ModuleGeneratorTest extends TestCase
         $modelPath = app_path("Models/{$this->module}/{$this->module}Model.php");
         $content = file_get_contents($modelPath);
 
-        $this->assertStringContainsString("protected \$table = 'tbl_custom_users';", $content);
+        $this->assertStringContainsString("protected string \$table = 'tbl_custom_users';", $content);
     }
 
     public function test_it_generates_restful_controller_actions_by_default(): void
@@ -117,5 +117,15 @@ class ModuleGeneratorTest extends TestCase
         File::deleteDirectory(app_path("Repositories/Interfaces/{$this->module}"));
         File::deleteDirectory(app_path("Repositories/Repository/{$this->module}"));
         File::deleteDirectory(app_path("Services/{$this->module}"));
+
+        $providerLine = "App\\Providers\\{$this->module}ServiceProvider::class,";
+        foreach ([base_path('bootstrap/providers.php'), config_path('app.php')] as $path) {
+            if (File::exists($path)) {
+                $content = File::get($path);
+                if (str_contains($content, $providerLine)) {
+                    File::put($path, str_replace($providerLine, '', $content));
+                }
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Providers;
 
@@ -7,15 +8,14 @@ use App\Repositories\Interfaces\{{name}}\{{name}}Interface;
 use App\Repositories\Repository\{{name}}\{{name}}Repository;
 use Illuminate\Support\ServiceProvider;
 
-
-class {{name}}ServiceProvider extends ServiceProvider
+final class {{name}}ServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->app->bind({{name}}Interface::class, {{name}}Repository::class);
     }
 
-    public function boot()
+    public function boot(): void
     {
         //
     }

@@ -15,12 +15,9 @@ class ApiResponseMakeCommand extends Command
     protected $signature = 'make:api-response';
     protected $description = 'Generate API Response helper classes';
 
-    protected Filesystem $files;
-
-    public function __construct(Filesystem $files)
+    public function __construct(private readonly Filesystem $files)
     {
         parent::__construct();
-        $this->files = $files;
     }
 
     public function handle(): int

@@ -12,14 +12,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ForceJsonResponse
 {
+    public function __construct(
+        private readonly ApiSpecificationFactory $specificationFactory
+    ) {}
+
     /**
      * Handle an incoming request and enforce specification-aware JSON headers.
      */
     public function handle(Request $request, Closure $next): Response
     {
-        /** @var ApiSpecificationFactory $factory */
-        $factory = app(ApiSpecificationFactory::class);
-        $specification = $factory->make();
+        $specification = $this->specificationFactory->make();
         $mediaType = $specification->getMediaType();
 
         // Force Accept header if not explicitly set

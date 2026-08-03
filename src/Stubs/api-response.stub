@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Support;
 
 use Illuminate\Http\JsonResponse;
 use Ixspx\ModuleGenerator\Factories\ApiSpecificationFactory;
 
-class ApiResponse
+final class ApiResponse
 {
     public static function success(
         mixed $data = null,

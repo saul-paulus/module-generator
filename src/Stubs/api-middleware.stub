@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -10,12 +12,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ForceJsonResponse
 {
+    public function __construct(
+        private readonly ApiSpecificationFactory $specificationFactory
+    ) {}
+
     /**
      * Handle an incoming request and enforce specification-aware JSON headers.
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $specification = app(ApiSpecificationFactory::class)->make();
+        $specification = $this->specificationFactory->make();
         $mediaType = $specification->getMediaType();
 
         if (!$request->headers->has('Accept')) {

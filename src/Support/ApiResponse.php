@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Support;
+namespace Ixspx\ModuleGenerator\Support;
 
 use Illuminate\Http\JsonResponse;
 use Ixspx\ModuleGenerator\Factories\ApiSpecificationFactory;
 
-class ApiResponse
+final class ApiResponse
 {
     /**
      * Format a success JSON response envelope using the active specification driver.

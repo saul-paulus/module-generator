@@ -28,7 +28,7 @@ class ApiSpecificationTest extends TestCase
     {
         config(['module-generator.api_specification' => 'rest']);
 
-        $response = \App\Support\ApiResponse::success(['id' => 1, 'name' => 'John']);
+        $response = ApiResponse::success(['id' => 1, 'name' => 'John']);
         $payload = json_decode($response->getContent(), true);
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -48,7 +48,7 @@ class ApiSpecificationTest extends TestCase
         $this->assertInstanceOf(JsonApiSpecification::class, $driver);
         $this->assertEquals('application/vnd.api+json', $driver->getMediaType());
 
-        $response = \App\Support\ApiResponse::success(['id' => 10, 'name' => 'Jane']);
+        $response = ApiResponse::success(['id' => 10, 'name' => 'Jane']);
         $payload = json_decode($response->getContent(), true);
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -63,7 +63,7 @@ class ApiSpecificationTest extends TestCase
         config(['module-generator.api_specification' => 'jsonapi']);
 
         $errors = new MessageBag(['email' => ['The email field is required.']]);
-        $response = \App\Support\ApiResponse::throw($errors, 'Validation error', 422);
+        $response = ApiResponse::throw($errors, 'Validation error', 422);
         $payload = json_decode($response->getContent(), true);
 
         $this->assertEquals(422, $response->getStatusCode());
@@ -85,7 +85,7 @@ class ApiSpecificationTest extends TestCase
         $this->assertEquals('application/problem+json', $driver->getMediaType());
 
         $errors = new MessageBag(['email' => ['The email field is required.']]);
-        $response = \App\Support\ApiResponse::throw($errors, 'Validation error', 422);
+        $response = ApiResponse::throw($errors, 'Validation error', 422);
         $payload = json_decode($response->getContent(), true);
 
         $this->assertEquals(422, $response->getStatusCode());
@@ -119,7 +119,7 @@ class ApiSpecificationTest extends TestCase
 
         config(['module-generator.api_specification' => 'custom-test']);
 
-        $response = \App\Support\ApiResponse::success(['foo' => 'bar']);
+        $response = ApiResponse::success(['foo' => 'bar']);
         $payload = json_decode($response->getContent(), true);
 
         $this->assertTrue($payload['custom_success']);

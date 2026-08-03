@@ -24,12 +24,10 @@ class ModuleGeneratorMakeCommand extends Command
                             {--force : Overwrite existing module files}';
 
     protected $description = 'Generate module structure (model, repository, service, controller, provider)';
-    protected Filesystem $files;
 
-    public function __construct(Filesystem $files)
+    public function __construct(private readonly Filesystem $files)
     {
         parent::__construct();
-        $this->files = $files;
     }
 
     public function handle(): int

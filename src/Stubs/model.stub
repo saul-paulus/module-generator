@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\{{name}};
 
 use Illuminate\Database\Eloquent\Model;
 
 class {{name}}Model extends Model
 {
-    protected $table = '{{table_prefix}}{{table_name}}';
+    protected string $table = '{{table_prefix}}{{table_name}}';
 
-    protected $fillable = [
+    /** @var list<string> */
+    protected array $fillable = [
         // Add your fillable fields here
     ];
 }

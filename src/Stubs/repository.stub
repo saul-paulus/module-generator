@@ -1,28 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Repository\{{name}};
 
 use App\Models\{{name}}\{{name}}Model;
 use App\Repositories\Interfaces\{{name}}\{{name}}Interface;
-
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class {{name}}Repository implements {{name}}Interface
+final class {{name}}Repository implements {{name}}Interface
 {
-   protected ${{nameVariable}}Model;
-
-    public function __construct({{name}}Model ${{nameVariable}}Model)
-    {
-        $this->{{nameVariable}}Model = ${{nameVariable}}Model;
-    }
+    public function __construct(
+        private readonly {{name}}Model $model
+    ) {}
 
     /**
      * Get all data
      */
     public function getAll(): Collection
     {
-        return $this->{{nameVariable}}Model->all();
+        return $this->model->all();
     }
 
     /**
@@ -30,7 +29,15 @@ class {{name}}Repository implements {{name}}Interface
      */
     public function findById(int $id): ?Model
     {
-        return $this->{{nameVariable}}Model->find($id);
+        return $this->model->find($id);
+    }
+
+    /**
+     * Get data by id or throw exception
+     */
+    public function findOrFail(int $id): Model
+    {
+        return $this->model->findOrFail($id);
     }
 
     /**
@@ -38,7 +45,7 @@ class {{name}}Repository implements {{name}}Interface
      */
     public function create(array $data): Model
     {
-        return $this->{{nameVariable}}Model->create($data);
+        return $this->model->create($data);
     }
 
     /**
@@ -74,7 +81,7 @@ class {{name}}Repository implements {{name}}Interface
      */
     public function findBy(array $conditions): Collection
     {
-        return $this->{{nameVariable}}Model
+        return $this->model
             ->where($conditions)
             ->get();
     }
@@ -82,8 +89,8 @@ class {{name}}Repository implements {{name}}Interface
     /**
      * Paginate data
      */
-    public function paginate(int $perPage = 15)
+    public function paginate(int $perPage = 15): LengthAwarePaginator
     {
-        return $this->{{nameVariable}}Model->paginate($perPage);
+        return $this->model->paginate($perPage);
     }
 }

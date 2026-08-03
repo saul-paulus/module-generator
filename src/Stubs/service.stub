@@ -1,30 +1,27 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Services\{{name}};
 
 use App\Repositories\Interfaces\{{name}}\{{name}}Interface;
-
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class {{name}}Service
+final class {{name}}Service
 {
-    protected ${{nameVariable}}Repository;
-    
-    public function __construct({{name}}Interface ${{nameVariable}}Interface)
-    {
-        $this->{{nameVariable}}Repository = ${{nameVariable}}Interface;
-    }
+    public function __construct(
+        private readonly {{name}}Interface $repository
+    ) {}
 
     /**
      * Get all data
      */
     public function getAll(): Collection
     {
-        return $this->{{nameVariable}}Repository->getAll();
+        return $this->repository->getAll();
     }
 
     /**
@@ -32,13 +29,7 @@ class {{name}}Service
      */
     public function getById(int $id): Model
     {
-        $data = $this->{{nameVariable}}Repository->findById($id);
-
-        if (!$data) {
-            throw new ModelNotFoundException('Data not found');
-        }
-
-        return $data;
+        return $this->repository->findOrFail($id);
     }
 
     /**
@@ -51,7 +42,7 @@ class {{name}}Service
             // Example business validation
             $this->validateCreate($data);
 
-            return $this->{{nameVariable}}Repository->create($data);
+            return $this->repository->create($data);
         });
     }
 
@@ -66,7 +57,7 @@ class {{name}}Service
 
             $this->validateUpdate($model, $data);
 
-            $this->{{nameVariable}}Repository->update($id, $data);
+            $this->repository->update($id, $data);
 
             return $this->getById($id);
         });
@@ -81,7 +72,7 @@ class {{name}}Service
 
         $this->validateDelete($model);
 
-        $this->{{nameVariable}}Repository->delete($id);
+        $this->repository->delete($id);
     }
 
     /**
@@ -89,22 +80,22 @@ class {{name}}Service
      */
     public function findBy(array $conditions): Collection
     {
-        return $this->{{nameVariable}}Repository->findBy($conditions);
+        return $this->repository->findBy($conditions);
     }
 
     /**
      * Pagination
      */
-    public function paginate(int $perPage = 15)
+    public function paginate(int $perPage = 15): LengthAwarePaginator
     {
-        return $this->{{nameVariable}}Repository->paginate($perPage);
+        return $this->repository->paginate($perPage);
     }
 
     /* =========================
        BUSINESS RULES
        ========================= */
 
-    protected function validateCreate(array $data): void
+    private function validateCreate(array $data): void
     {
         // Example:
         // if (empty($data['status'])) {
@@ -112,7 +103,7 @@ class {{name}}Service
         // }
     }
 
-    protected function validateUpdate(Model $model, array $data): void
+    private function validateUpdate(Model $model, array $data): void
     {
         // Example:
         // if ($model->status === 'CLOSED') {
@@ -120,7 +111,7 @@ class {{name}}Service
         // }
     }
 
-    protected function validateDelete(Model $model): void
+    private function validateDelete(Model $model): void
     {
         // Example:
         // if ($model->status === 'ACTIVE') {

@@ -161,7 +161,19 @@ class JsonApiSpecification implements ApiSpecificationInterface
             return null;
         }
 
-        if (is_array($data) || $data instanceof \Traversable) {
+        if (is_array($data)) {
+            if (array_is_list($data)) {
+                $transformed = [];
+                foreach ($data as $key => $item) {
+                    $transformed[] = $this->transformSingleItem($item, $key);
+                }
+                return $transformed;
+            }
+
+            return $this->transformSingleItem($data);
+        }
+
+        if ($data instanceof \Traversable) {
             $transformed = [];
             foreach ($data as $key => $item) {
                 $transformed[] = $this->transformSingleItem($item, $key);

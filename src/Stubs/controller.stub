@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\{{name}};
 
 use App\Http\Controllers\Controller;
@@ -8,14 +10,11 @@ use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class {{name}}Controller extends Controller
+final class {{name}}Controller extends Controller
 {
-    protected ${{nameVariable}}Service;
-
-    public function __construct({{name}}Service ${{nameVariable}}Service)
-    {
-        $this->{{nameVariable}}Service = ${{nameVariable}}Service;
-    }
+    public function __construct(
+        private readonly {{name}}Service ${{nameVariable}}Service
+    ) {}
 
     public function index(): JsonResponse
     {

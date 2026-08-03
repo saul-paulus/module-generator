@@ -68,8 +68,7 @@ class ApiResponseTest extends TestCase
         );
 
         // Response structure
-        $this->assertStringContainsString("'success'      => true", $content);
-        $this->assertStringContainsString("'responseCode' => \$status", $content);
-        $this->assertStringContainsString("'message'      => \$message", $content);
+        $this->assertStringContainsString("ApiSpecificationFactory::class", $content);
+        $this->assertStringContainsString("formatSuccess", $content);
     }
 }
