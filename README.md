@@ -1,11 +1,11 @@
 # Laravel Module Generator & Multi-Specification API Foundation
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/ixspx/module-generator.svg?style=flat-square)](https://packagist.org/packages/ixspx/module-generator)
-[![PHP Version](https://img.shields.io/badge/PHP-%5E8.2%20%7C%7C%20%5E8.3-8892BF.svg?style=flat-square)](https://www.php.net/)
+[![PHP Version](https://img.shields.io/badge/PHP-%5E8.2%20%7C%7C%20%5E8.3%20%7C%7C%20%5E8.4%20%7C%7C%20%5E8.5-8892BF.svg?style=flat-square)](https://www.php.net/)
 [![Laravel Framework](https://img.shields.io/badge/Laravel-%5E10.0%20%7C%7C%20%5E11.0%20%7C%7C%20%5E12.0%20%7C%7C%20%5E13.0-FF2D20.svg?style=flat-square)](https://laravel.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 
-`ixspx/module-generator` is an enterprise-grade Laravel developer tooling package designed to accelerate development by scaffolding cleanly layered application modules (Model, Repository Interface, Repository Implementation, Service, Controller, and Service Provider) while establishing a **driver-driven, multi-specification REST API foundation** supporting **Standard REST**, **JSON:API 1.1**, **RFC 7807 Problem Details**, and custom API drivers.
+`ixspx/module-generator` is an enterprise-grade Laravel developer tooling package designed to accelerate development by scaffolding cleanly layered application modules (Model, Repository Interface, Repository Implementation, Service, Controller, and Service Provider) following **PHP 8.2+**, **Laravel 12**, **PSR-12**, and **Clean Architecture** standards while establishing a **driver-driven, multi-specification REST API foundation** supporting **Standard REST**, **JSON:API 1.1**, **RFC 7807 Problem Details**, and custom API drivers.
 
 ---
 
@@ -13,19 +13,16 @@
 
 - [1. Project Overview](#1-project-overview)
 - [2. Key Features](#2-key-features)
-- [3. Architecture Overview](#3-architecture-overview)
-- [4. API Specification Drivers](#4-api-specification-drivers)
-- [5. Generated Structure](#5-generated-structure)
-- [6. Design Principles](#6-design-principles)
+- [3. Modern PHP 8.2+ & Clean Architecture Standards](#3-modern-php-82--clean-architecture-standards)
+- [4. Architecture Overview](#4-architecture-overview)
+- [5. API Specification Drivers](#5-api-specification-drivers)
+- [6. Generated Structure & Code Examples](#6-generated-structure--code-examples)
 - [7. Installation](#7-installation)
 - [8. Configuration](#8-configuration)
 - [9. Available Artisan Commands](#9-available-artisan-commands)
 - [10. Extensibility & Custom Drivers](#10-extensibility--custom-drivers)
-- [11. Usage Examples](#11-usage-examples)
-- [12. Package Structure](#12-package-structure)
-- [13. Best Practices](#13-best-practices)
-- [14. Limitations & Solutions](#14-limitations--solutions)
-- [15. License](#15-license)
+- [11. Best Practices](#11-best-practices)
+- [12. License](#12-license)
 
 ---
 
@@ -33,22 +30,44 @@
 
 ### What is this package?
 `ixspx/module-generator` is a dual-purpose Laravel package:
-1. **Module Scaffolder (`make:mod`)**: Scaffolds modular domain layers adhering to a Service-Repository pattern, providing separation of database concerns, domain business logic, HTTP delivery, and dependency injection.
+1. **Modern Module Scaffolder (`make:mod`)**: Scaffolds modular domain layers adhering strictly to Clean Architecture, SOLID principles, and Service-Repository patterns using modern PHP 8.2+ features (Constructor Property Promotion, `readonly`, typed properties, `strict_types=1`, `final` classes).
 2. **Multi-Specification API Starter (`make:api-install` & `make:api-response`)**: Provisions a specification-aware API response engine, middleware to enforce JSON/JSON:API headers, and a centralized exception registrar. Switch between Standard REST, JSON:API 1.1, or Problem Details instantly via configuration.
 
 ---
 
 ## 2. Key Features
 
-- 🏗 **Full-Stack Module Generator**: Scaffolds Model, Interface, Concrete Repository, Service, Controller, and Service Provider via `php artisan make:mod {Name}`.
+- 🏗 **Modern Full-Stack Module Generator**: Scaffolds Model, Interface, Concrete Repository, Service, Controller, and Service Provider via `php artisan make:mod {Name}`.
+- ⚡ **PHP 8.2+ & Laravel 12 Native**: Built with `declare(strict_types=1)`, Constructor Property Promotion, `private readonly` properties, typed attributes, and `final` classes.
 - 🔌 **Driver-Driven API Architecture**: Switch between Standard REST, JSON:API 1.1, and RFC 7807 Problem Details simply by changing `config('module-generator.api_specification')` or `.env`.
-- ⚡ **Auto-Registration of Providers & Routes**: Automatically registers scaffolded providers in `bootstrap/providers.php` and appends RESTful routes to `routes/api.php`.
+- ⚙️ **Auto-Registration of Providers & Routes**: Automatically registers scaffolded providers in `bootstrap/providers.php` or `config/app.php` and appends RESTful routes to `routes/api.php`.
 - 🎨 **Publishable Stubs & Configuration**: Fully customizable code templates via `php artisan vendor:publish --tag=module-generator-stubs` and `module-generator-config`.
 - 🔒 **Centralized Exception Handling**: Specification-aware exception mapping for database, validation, auth, and domain exceptions.
 
 ---
 
-## 3. Architecture Overview
+## 3. Modern PHP 8.2+ & Clean Architecture Standards
+
+All scaffolded code generated by this package enforces strict modern PHP and Clean Architecture rules:
+
+### A. Constructor Property Promotion & Visibility Rules
+- **`private readonly`**: Used for all internal class dependencies injected via constructor (Services, Repositories, Models, Filesystem).
+- **`protected`**: Reserved strictly for inheritance hooks or Eloquent internal properties (`$table`, `$fillable`).
+- **`public`**: Reserved exclusively for explicit class API methods.
+
+### B. Modern PHP Features Enforced
+- `declare(strict_types=1)` at the top of every generated file.
+- **`final` class declaration**: Controllers, Services, Repositories, Providers, and Middleware are `final` by default to prevent accidental inheritance coupling.
+- **Typed Properties & Explicit Return Types**: All properties and methods specify explicit types (e.g. `LengthAwarePaginator`, `JsonResponse`, `Model`, `: void`).
+
+### C. Clean Architecture Principles
+- **Dependency Inversion**: Services depend on Repository Interfaces (`{Name}Interface`), never on concrete Eloquent repositories or models directly.
+- **No Service Locators in Application Code**: Dependencies are injected via Constructor DI.
+- **Single Responsibility**: Clean separation between Delivery (Controller), Business Orchestration (Service), Data Access (Repository), and Persistence (Model).
+
+---
+
+## 4. Architecture Overview
 
 ```
                         ┌────────────────────────────┐
@@ -76,7 +95,7 @@
 
 ---
 
-## 4. API Specification Drivers
+## 5. API Specification Drivers
 
 ### A. Standard REST API (Default)
 - **Media Type**: `application/json`
@@ -96,7 +115,7 @@
 {
   "jsonapi": { "version": "1.1" },
   "data": {
-    "type": "users",
+    "type": "resources",
     "id": "1",
     "attributes": { "name": "John Doe" }
   }
@@ -120,43 +139,140 @@
 
 ---
 
-## 5. Generated Structure
+## 6. Generated Structure & Code Examples
 
+Running `php artisan make:mod User` generates the following clean, modern PHP 8.2+ structure:
+
+### 1. Controller (`App\Http\Controllers\User\UserController.php`)
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use App\Services\User\UserService;
+use App\Support\ApiResponse;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+final class UserController extends Controller
+{
+    public function __construct(
+        private readonly UserService $userService
+    ) {}
+
+    public function index(): JsonResponse
+    {
+        $data = $this->userService->getAll();
+        $meta = ['count' => $data->count()];
+        return ApiResponse::success($data, 'Data retrieved successfully', 200, $meta);
+    }
+}
 ```
-app/
-├── Exceptions/
-│   └── ApiExceptionRegistrar.php              # Global Exception Handler Registrar
-├── Http/
-│   ├── Controllers/
-│   │   └── {ModuleName}/
-│   │       └── {ModuleName}Controller.php     # RESTful Controller
-│   └── Middleware/
-│       └── ForceJsonResponse.php              # Specification-Aware Header Middleware
-├── Models/
-│   └── {ModuleName}/
-│       └── {ModuleName}Model.php              # Eloquent Model
-├── Providers/
-│   └── {ModuleName}ServiceProvider.php        # Service Provider
-├── Repositories/
-│   ├── Interfaces/
-│   │   └── {ModuleName}/
-│   │       └── {ModuleName}Interface.php      # Repository Contract
-│   └── Repository/
-│       └── {ModuleName}/
-│           └── {ModuleName}Repository.php     # Concrete Repository
-├── Services/
-│   └── {ModuleName}/
-│       └── {ModuleName}Service.php            # Transactional Business Service
-└── Support/
-    └── ApiResponse.php                        # Specification-Aware Response Helper
+
+### 2. Business Service (`App\Services\User\UserService.php`)
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services\User;
+
+use App\Repositories\Interfaces\User\UserInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+final class UserService
+{
+    public function __construct(
+        private readonly UserInterface $repository
+    ) {}
+
+    public function getAll(): Collection
+    {
+        return $this->repository->getAll();
+    }
+
+    public function getById(int $id): Model
+    {
+        return $this->repository->findOrFail($id);
+    }
+
+    public function create(array $data): Model
+    {
+        return DB::transaction(function () use ($data) {
+            return $this->repository->create($data);
+        });
+    }
+
+    public function paginate(int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->paginate($perPage);
+    }
+}
 ```
 
----
+### 3. Repository (`App\Repositories\Repository\User\UserRepository.php`)
+```php
+<?php
 
-## 6. Design Principles
+declare(strict_types=1);
 
-- **SOLID & Open/Closed Principle (OCP)**: New API specifications can be added without altering package core.
-- **Dependency Injection**: Resolves `ApiSpecificationInterface` dynamically via `ApiSpecificationFactory`.
+namespace App\Repositories\Repository\User;
+
+use App\Models\User\UserModel;
+use App\Repositories\Interfaces\User\UserInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+
+final class UserRepository implements UserInterface
+{
+    public function __construct(
+        private readonly UserModel $model
+    ) {}
+
+    public function getAll(): Collection
+    {
+        return $this->model->all();
+    }
+
+    public function findOrFail(int $id): Model
+    {
+        return $this->model->findOrFail($id);
+    }
+
+    public function paginate(int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->model->paginate($perPage);
+    }
+}
+```
+
+### 4. Eloquent Model (`App\Models\User\UserModel.php`)
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models\User;
+
+use Illuminate\Database\Eloquent\Model;
+
+class UserModel extends Model
+{
+    protected string $table = 'users';
+
+    /** @var list<string> */
+    protected array $fillable = [
+        // Add your fillable fields here
+    ];
+}
+```
 
 ---
 
@@ -178,20 +294,9 @@ php artisan vendor:publish --tag=module-generator-config
 php artisan vendor:publish --tag=module-generator-stubs
 ```
 
-> [!TIP]
-> - **`module-generator-config`**: Allows you to customize global package behavior, such as switching API specifications (`rest`, `jsonapi`, `problem-details`), setting table prefixes, selecting controller action styles (`restful` vs `handler`), and toggling automatic route/provider registration.
-> - **`module-generator-stubs`**: Copies all generator code templates to `stubs/module-generator/` in your application. Any changes made to these local stub files will automatically override internal package defaults, allowing complete control over generated class structures.
-
 ---
 
 ## 8. Configuration
-
-> [!NOTE]
-> **Zero-Config Behavior**: You do **NOT** need to create or publish `config/module-generator.php` for the package to work. The package automatically merges internal default configuration via `$this->mergeConfigFrom(...)`.
-> 
-> The file `config/module-generator.php` will only appear in your host application's `config/` directory **after** you run `php artisan vendor:publish --tag=module-generator-config`.
-
-### Configuration Structure (`config/module-generator.php`)
 
 ```php
 return [
@@ -199,55 +304,21 @@ return [
     |--------------------------------------------------------------------------
     | Default API Specification Driver
     |--------------------------------------------------------------------------
-    |
-    | Supported Drivers out of the box:
-    |   - 'rest'            : Standard REST Envelope (default)
-    |   - 'jsonapi'         : Official JSON:API 1.1 Specification (jsonapi.org)
-    |   - 'problem-details' : RFC 7807 Problem Details Specification
-    |   - Custom Class Name : Any class implementing ApiSpecificationInterface
-    |
+    | Supported Drivers: 'rest', 'jsonapi', 'problem-details', or custom class
     */
     'api_specification' => env('API_SPECIFICATION', 'rest'),
 
-    /*
-    |--------------------------------------------------------------------------
-    | JSON:API 1.1 Specification Options
-    |--------------------------------------------------------------------------
-    */
     'jsonapi' => [
         'version'  => '1.1',
         'base_url' => env('APP_URL', 'http://localhost'),
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | RFC 7807 Problem Details Options
-    |--------------------------------------------------------------------------
-    */
     'problem_details' => [
         'type_base_url' => env('APP_URL', 'http://localhost') . '/errors',
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Database Table Prefix
-    |--------------------------------------------------------------------------
-    */
     'table_prefix' => '',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Controller Action Naming Style
-    |--------------------------------------------------------------------------
-    | Options: 'restful' (index, show, store, update, destroy), 'handler'
-    */
-    'controller_style' => 'restful',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Automatic Registration Options
-    |--------------------------------------------------------------------------
-    */
+    'controller_style' => 'restful', // 'restful' or 'handler'
     'auto_register_provider' => true,
     'auto_register_route'    => true,
 ];
@@ -259,7 +330,7 @@ return [
 
 | Command | Signature | Description | Key Options | Example Usage |
 | :--- | :--- | :--- | :--- | :--- |
-| **Module Generator** | `make:mod {name}` | Scaffolds complete 6-layer module structure. | `--table=`, `--table-prefix=`, `--style=`, `--no-provider`, `--no-route`, `--force` | `php artisan make:mod OrderPayment` |
+| **Module Generator** | `make:mod {name}` | Scaffolds complete 6-layer PHP 8.2+ module structure. | `--table=`, `--table-prefix=`, `--style=`, `--no-provider`, `--no-route`, `--force` | `php artisan make:mod OrderPayment` |
 | **API Installer** | `make:api-install` | Installs standard API foundation infrastructure. | `--force` | `php artisan make:api-install --force` |
 | **API Response Helper** | `make:api-response` | Scaffolds `ApiResponse` support class. | None | `php artisan make:api-response` |
 
@@ -283,62 +354,14 @@ public function boot(ApiSpecificationFactory $factory): void
 
 ---
 
-## 11. Usage Examples
+## 11. Best Practices
 
-Switch to JSON:API 1.1 in `.env`:
-
-```env
-API_SPECIFICATION=jsonapi
-```
-
-Switch to RFC 7807 Problem Details in `.env`:
-
-```env
-API_SPECIFICATION=problem-details
-```
+1. **Keep Controllers Thin**: Controllers delegate formatting to `ApiResponse::success()`, which formats payloads according to the configured driver.
+2. **Use Interface Binding**: Inject `{Name}Interface` into Services to adhere to Dependency Inversion.
+3. **Centralize Exception Mapping**: Throw domain exceptions inside services; `ApiExceptionRegistrar` converts them to the active specification driver format.
 
 ---
 
-## 12. Package Structure
-
-```
-.
-├── config/
-│   └── module-generator.php
-├── src/
-│   ├── Console/
-│   │   └── Commands/
-│   ├── Contracts/
-│   │   └── ApiSpecificationInterface.php      # Driver Interface
-│   ├── Factories/
-│   │   └── ApiSpecificationFactory.php        # Driver Factory
-│   ├── Specifications/
-│   │   ├── JsonApiSpecification.php           # JSON:API 1.1 Driver
-│   │   ├── ProblemDetailsSpecification.php    # RFC 7807 Driver
-│   │   └── RestApiSpecification.php           # Standard REST Driver
-│   ├── Support/
-│   └── Traits/
-└── tests/
-    └── Feature/
-        └── ApiSpecificationTest.php
-```
-
----
-
-## 13. Best Practices
-
-1. **Keep Controllers Thin**: Controllers delegate data formatting to `ApiResponse::success()`, which automatically formats payloads according to the configured driver.
-2. **Centralize Exception Mapping**: Throw domain exceptions inside services; `ApiExceptionRegistrar` converts them to the active specification driver format.
-
----
-
-## 14. Limitations & Solutions
-
-- **Multi-Specification Support**: Solved via `ApiSpecificationInterface`, `ApiSpecificationFactory`, and specification drivers (`rest`, `jsonapi`, `problem-details`).
-- **Backward Compatibility**: Preserved with `'rest'` as default driver.
-
----
-
-## 15. License
+## 12. License
 
 Licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
