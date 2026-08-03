@@ -336,6 +336,41 @@ return [
 
 ---
 
+### ⚙️ Setting Up API Route Prefixing (`api/v1`) in Laravel 11 & 12
+
+After running `php artisan make:api-install`, to establish a standard API route prefix (e.g. `http://127.0.0.1:8000/api/v1/{endpoint}`) in Laravel 11 or 12, configure the `then` routing callback inside your application's `bootstrap/app.php`:
+
+```php
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Route;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+        then: function ($router) {
+            Route::prefix('api/v1')
+                ->group(base_path('routes/api.php'));
+        },
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        // ...
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        // ...
+    })->create();
+```
+
+> [!TIP]
+> With this configuration, any module scaffolded via `php artisan make:mod {Name}` will automatically have its routes exposed under `http://127.0.0.1:8000/api/v1/{module-name}`.
+
+---
+
 ## 10. Extensibility & Custom Drivers
 
 Extend the factory with custom API drivers in your `AppServiceProvider`:
