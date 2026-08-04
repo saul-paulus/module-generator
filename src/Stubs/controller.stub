@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\{{name}};
+namespace App\Http\Controllers\{{namespace}};
 
 use App\Http\Controllers\Controller;
-use App\Services\{{name}}\{{name}}Service;
+use App\Services\{{namespace}}\{{name}}Service;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

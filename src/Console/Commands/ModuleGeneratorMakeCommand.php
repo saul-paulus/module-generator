@@ -32,17 +32,29 @@ class ModuleGeneratorMakeCommand extends Command
 
     public function handle(): int
     {
-        $name = Str::studly($this->argument('name'));
+        // Normalize each path segment to StudlyCase, preserving the slash separator.
+        // e.g. "denda/esyCash" → "Denda/Esycash", "User" → "User"
+        $modulePath = implode('/', array_map(
+            fn (string $segment) => Str::studly($segment),
+            explode('/', str_replace('\\', '/', $this->argument('name')))
+        ));
 
-        $targetModelFile = app_path("Models/{$name}/{$name}Model.php");
+        // Leaf segment is the class/file name (e.g. "Esycash" or "User").
+        $segments  = explode('/', $modulePath);
+        $className = end($segments);
+
+        // PHP namespace uses backslashes (e.g. "Denda\Esycash").
+        $phpNamespace = implode('\\', $segments);
+
+        $targetModelFile = app_path("Models/{$modulePath}/{$className}Model.php");
 
         if ($this->files->exists($targetModelFile) && !$this->option('force')) {
-            $this->error("Module {$name} already exists.");
+            $this->error("Module {$modulePath} already exists.");
             return self::FAILURE;
         }
 
         $tableName = $this->option('table')
-            ?: Str::snake(Str::pluralStudly($name));
+            ?: Str::snake(Str::pluralStudly($className));
 
         $tablePrefix = $this->option('table-prefix')
             ?? config('module-generator.table_prefix', '');
@@ -51,18 +63,19 @@ class ModuleGeneratorMakeCommand extends Command
             ?? config('module-generator.controller_style', 'restful');
 
         $replacements = [
-            '{{name}}'          => $name,
-            '{{nameVariable}}'  => lcfirst($name),
+            '{{name}}'          => $className,
+            '{{namespace}}'     => $phpNamespace,
+            '{{nameVariable}}'  => lcfirst($className),
             '{{table_name}}'    => $tableName,
             '{{table_prefix}}'  => $tablePrefix,
         ];
 
         $this->makeDirectories();
-        $this->generateFiles($name, $replacements, $style);
+        $this->generateFiles($modulePath, $className, $replacements, $style);
 
         // Auto-Register Provider unless --no-provider flag is set
         if (!$this->option('no-provider') && config('module-generator.auto_register_provider', true)) {
-            $providerClass = "App\\Providers\\{$name}ServiceProvider";
+            $providerClass = "App\\Providers\\{$className}ServiceProvider";
             $registrar = new ProviderRegistrar($this->files);
             if ($registrar->register($providerClass)) {
                 $this->info("✔ Registered provider: {$providerClass}");
@@ -72,12 +85,12 @@ class ModuleGeneratorMakeCommand extends Command
         // Auto-Register Routes unless --no-route flag is set
         if (!$this->option('no-route') && config('module-generator.auto_register_route', true)) {
             $routeRegistrar = new RouteRegistrar($this->files);
-            if ($routeRegistrar->registerApiResource($name, $style)) {
-                $this->info("✔ Appended routes for {$name} to routes/api.php");
+            if ($routeRegistrar->registerApiResource($phpNamespace, $className, $style)) {
+                $this->info("✔ Appended routes for {$className} to routes/api.php");
             }
         }
 
-        $this->info("Module {$name} created successfully.");
+        $this->info("Module {$modulePath} created successfully.");
         return self::SUCCESS;
     }
 
@@ -97,20 +110,20 @@ class ModuleGeneratorMakeCommand extends Command
         }
     }
 
-    protected function generateFiles(string $name, array $replacements, string $style): void
+    protected function generateFiles(string $modulePath, string $className, array $replacements, string $style): void
     {
         $controllerStub = ($style === 'handler') ? 'controller.handler.stub' : 'controller.stub';
 
         $files = [
-            'model.stub'                => app_path("Models/{$name}/{$name}Model.php"),
-            'repository.interface.stub' => app_path("Repositories/Interfaces/{$name}/{$name}Interface.php"),
-            'repository.stub'           => app_path("Repositories/Repository/{$name}/{$name}Repository.php"),
-            'service.stub'              => app_path("Services/{$name}/{$name}Service.php"),
-            $controllerStub             => app_path("Http/Controllers/{$name}/{$name}Controller.php"),
+            'model.stub'                => app_path("Models/{$modulePath}/{$className}Model.php"),
+            'repository.interface.stub' => app_path("Repositories/Interfaces/{$modulePath}/{$className}Interface.php"),
+            'repository.stub'           => app_path("Repositories/Repository/{$modulePath}/{$className}Repository.php"),
+            'service.stub'              => app_path("Services/{$modulePath}/{$className}Service.php"),
+            $controllerStub             => app_path("Http/Controllers/{$modulePath}/{$className}Controller.php"),
         ];
 
         if (!$this->option('no-provider')) {
-            $files['provider.stub'] = app_path("Providers/{$name}ServiceProvider.php");
+            $files['provider.stub'] = app_path("Providers/{$className}ServiceProvider.php");
         }
 
         foreach ($files as $stub => $target) {

@@ -14,7 +14,7 @@ class RouteRegistrar
     /**
      * Register API routes for a generated module in routes/api.php
      */
-    public function registerApiResource(string $moduleName, string $style = 'restful'): bool
+    public function registerApiResource(string $phpNamespace, string $className, string $style = 'restful'): bool
     {
         $routeFile = base_path('routes/api.php');
 
@@ -22,8 +22,8 @@ class RouteRegistrar
             return false;
         }
 
-        $controllerClass = "App\\Http\\Controllers\\{$moduleName}\\{$moduleName}Controller";
-        $uri = Str::kebab(Str::pluralStudly($moduleName));
+        $controllerClass = "App\\Http\\Controllers\\{$phpNamespace}\\{$className}Controller";
+        $uri = Str::kebab(Str::pluralStudly($className));
 
         if ($style === 'handler') {
             $routeBlock = "\nRoute::controller(\\{$controllerClass}::class)->group(function () {\n"
