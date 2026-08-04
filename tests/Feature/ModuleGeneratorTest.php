@@ -89,8 +89,11 @@ class ModuleGeneratorTest extends TestCase
         $controllerPath = app_path("Http/Controllers/{$this->module}/{$this->module}Controller.php");
         $content = file_get_contents($controllerPath);
 
-        $this->assertStringContainsString('public function HandlerGetAll()', $content);
-        $this->assertStringContainsString('public function HandlerGetById(', $content);
+        $this->assertStringContainsString('public function handlerGetAll()', $content);
+        $this->assertStringContainsString('public function handlerGetById(', $content);
+        $this->assertStringContainsString('public function handlerCreate(', $content);
+        $this->assertStringContainsString('public function handlerUpdate(', $content);
+        $this->assertStringContainsString('public function handlerDelete(', $content);
     }
 
     public function test_it_does_not_overwrite_existing_module_without_force(): void

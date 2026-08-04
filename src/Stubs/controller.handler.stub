@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Services\{{namespace}}\{{name}}Service;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 final class {{name}}Controller extends Controller
 {
@@ -15,23 +16,34 @@ final class {{name}}Controller extends Controller
         private readonly {{name}}Service ${{nameVariable}}Service
     ) {}
 
-    public function HandlerGetAll(): JsonResponse
+    public function handlerGetAll(): JsonResponse
     {
         $data = $this->{{nameVariable}}Service->getAll();
         $meta = [
             'count' => $data->count(),
         ];
-        $links = [];
-        return ApiResponse::success($data, 'Data retrieved successfully', 200, $meta, $links);
+        return ApiResponse::success($data, 'Data retrieved successfully', 200, $meta);
     }
 
-    public function HandlerGetById(int $id): JsonResponse
+    public function handlerGetById(int $id): JsonResponse
     {
         $data = $this->{{nameVariable}}Service->getById($id);
         return ApiResponse::success($data);
     }
 
-    public function HandlerDeleteById(int $id): JsonResponse
+    public function handlerCreate(Request $request): JsonResponse
+    {
+        $data = $this->{{nameVariable}}Service->create($request->all());
+        return ApiResponse::success($data, 'Data created successfully', 201);
+    }
+
+    public function handlerUpdate(Request $request, int $id): JsonResponse
+    {
+        $data = $this->{{nameVariable}}Service->update($id, $request->all());
+        return ApiResponse::success($data, 'Data updated successfully');
+    }
+
+    public function handlerDelete(int $id): JsonResponse
     {
         $this->{{nameVariable}}Service->delete($id);
         return ApiResponse::success(null, 'Data deleted successfully');

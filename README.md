@@ -376,6 +376,56 @@ return Application::configure(basePath: dirname(__DIR__))
 
 ---
 
+### 🔀 Controller Action Naming Styles (RESTful vs. Handler Style)
+
+`ixspx/module-generator` supports two distinct controller action naming conventions:
+
+1. **RESTful Style (Default)**: Standard Laravel resource action names (`index`, `show`, `store`, `update`, `destroy`) mapped via `Route::apiResource()`.
+2. **Handler Style**: Explicit handler method names (`handlerGetAll`, `handlerGetById`, `handlerCreate`, `handlerUpdate`, `handlerDelete`) mapped via explicit `Route::controller()->group()`. This is particularly intuitive for developers coming from languages like Go, Express/TypeScript, Java, or C#.
+
+#### Option A: Per-Module Generation via `--style=handler`
+To generate a specific module using Handler style:
+
+```bash
+php artisan make:mod User --style=handler
+```
+
+Scaffolded Controller (`app/Http/Controllers/User/UserController.php`):
+```php
+final class UserController extends Controller
+{
+    public function handlerGetAll(): JsonResponse { ... }
+    public function handlerGetById(int $id): JsonResponse { ... }
+    public function handlerCreate(Request $request): JsonResponse { ... }
+    public function handlerUpdate(Request $request, int $id): JsonResponse { ... }
+    public function handlerDelete(int $id): JsonResponse { ... }
+}
+```
+
+Scaffolded Route (`routes/api.php`):
+```php
+Route::controller(\App\Http\Controllers\User\UserController::class)->group(function () {
+    Route::get('/users', 'handlerGetAll');
+    Route::get('/users/{id}', 'handlerGetById');
+    Route::post('/users', 'handlerCreate');
+    Route::put('/users/{id}', 'handlerUpdate');
+    Route::delete('/users/{id}', 'handlerDelete');
+});
+```
+
+#### Option B: Application-Wide Default Configuration
+To set Handler style as the default for all scaffolded modules across your project, set `controller_style` in `config/module-generator.php`:
+
+```php
+return [
+    'controller_style' => env('MODULE_CONTROLLER_STYLE', 'handler'),
+];
+```
+
+Now, running `php artisan make:mod User` will automatically scaffold using Handler style.
+
+---
+
 ## 10. Extensibility & Custom Drivers
 
 Extend the factory with custom API drivers in your `AppServiceProvider`:

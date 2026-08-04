@@ -27,9 +27,11 @@ class RouteRegistrar
 
         if ($style === 'handler') {
             $routeBlock = "\nRoute::controller(\\{$controllerClass}::class)->group(function () {\n"
-                . "    Route::get('/{$uri}', 'HandlerGetAll');\n"
-                . "    Route::get('/{$uri}/{id}', 'HandlerGetById');\n"
-                . "    Route::delete('/{$uri}/{id}', 'HandlerDeleteById');\n"
+                . "    Route::get('/{$uri}', 'handlerGetAll');\n"
+                . "    Route::get('/{$uri}/{id}', 'handlerGetById');\n"
+                . "    Route::post('/{$uri}', 'handlerCreate');\n"
+                . "    Route::put('/{$uri}/{id}', 'handlerUpdate');\n"
+                . "    Route::delete('/{$uri}/{id}', 'handlerDelete');\n"
                 . "});\n";
         } else {
             $routeBlock = "\nRoute::apiResource('{$uri}', \\{$controllerClass}::class);";
